@@ -6,12 +6,14 @@
 /*   By: jpauline <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 17:28:16 by jpauline          #+#    #+#             */
-/*   Updated: 2023/02/03 15:58:01 by jpauline         ###   ########.fr       */
+/*   Updated: 2023/02/03 18:03:16 by jpauline         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RANDOM_ACCESS_ITERATOR_HPP
 #define RANDOM_ACCESS_ITERATOR_HPP
+
+#include "iterator_traits.hpp"
 
 namespace ft
 {
@@ -19,10 +21,6 @@ namespace ft
 	template<typename T>
 	class random_access_iterator
 	{
-		private :
-
-			pointer	_ptr;
-
 		public :
 
 			typedef typename ft::random_access_iterator_tag	iterator_category;
@@ -34,7 +32,13 @@ namespace ft
 			typedef const T*								const_pointer;
 			typedef const T&								const_reference;
 
-		/*COPLIEN*/
+		private :
+
+			pointer	_ptr;
+
+		public :
+		
+			/*COPLIEN*/
 
 			random_access_iterator(void) : _ptr(NULL) {}
 			random_access_iterator(pointer _ptr) : _ptr(_ptr) {}

@@ -6,12 +6,14 @@
 /*   By: jpauline <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 17:28:16 by jpauline          #+#    #+#             */
-/*   Updated: 2023/02/03 15:56:34 by jpauline         ###   ########.fr       */
+/*   Updated: 2023/02/03 18:04:01 by jpauline         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REVERSE_ITERATOR_HPP
 #define REVERSE_ITERATOR_HPP
+
+#include "iterator_traits.hpp"
 
 namespace ft
 {
@@ -36,7 +38,7 @@ namespace ft
 
 		/*COPLIEN*/
 
-			reverse_currenterator(void) : _current(NULL) {}
+			reverse_iterator(void) : _current(NULL) {}
 			explicit reverse_iterator(Iter input_iter) : _current(input_iter) {}
 
 			template<class T>
