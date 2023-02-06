@@ -6,7 +6,7 @@
 /*   By: jpauline <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 17:35:43 by jpauline          #+#    #+#             */
-/*   Updated: 2023/02/03 18:07:23 by jpauline         ###   ########.fr       */
+/*   Updated: 2023/02/06 18:03:04 by jpauline         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,19 +170,12 @@ namespace ft
 			emplace_back (c++11)
 			*/
 
-			size_t	linux_capacity_caclulator(size_t n)
-			{
-				if (n <= _size * 2)
-					return (_size * 2);
-				return (n);
-			}
-
 			void push_back(const T& val)
 			{
 				if (_capacity == 0)
 					this->reserve(1);
 				else if (_capacity <= _size)
-					this->reserve(linux_capacity_caclulator(_size + 1));
+					this->reserve(capacity_caclulator(_size + 1));
 				this->_allocator.construct(this->_array + this->_size, val);
 				_size++;
 			}
@@ -192,6 +185,16 @@ namespace ft
 			~~~~~~~~~~
 			get_allocator
 			*/
+
+			
+		private :
+
+			size_t	capacity_caclulator(size_t n)
+			{
+				if (n <= _size * 2)
+					return (_size * 2);
+				return (n);
+			}
 
 
 

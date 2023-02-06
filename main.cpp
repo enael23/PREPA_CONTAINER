@@ -6,7 +6,7 @@
 /*   By: jpauline <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 13:03:31 by jpauline          #+#    #+#             */
-/*   Updated: 2023/02/03 18:18:46 by jpauline         ###   ########.fr       */
+/*   Updated: 2023/02/06 16:57:02 by jpauline         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,8 @@ int main()
 
 	std::cout << "v[0] = " << v[0] << std::endl;
 	std::cout << "v[1] = " << v[1] << std::endl;
+
+	ft::vector<int> v2 = v;
+
+	std::cout << "v2[0] = " << v2[0] << std::endl;
 }
