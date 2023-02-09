@@ -6,7 +6,7 @@
 /*   By: jpauline <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 17:35:43 by jpauline          #+#    #+#             */
-/*   Updated: 2023/02/09 20:41:16 by jpauline         ###   ########.fr       */
+/*   Updated: 2023/02/09 21:36:26 by jpauline         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,37 +186,81 @@ namespace ft
 			Element access:
 			~~~~~~~~~~~~~~~
 			operator[]		v	const	v
-			at
-			front
-			back
-			data
+			at				v	const	v
+			front			v	const	v
+			back			v	const	v
+			data			v	const	v
 			*/
 
-			T &operator[](size_type index)
+			reference operator[] (size_type n)
 			{
-				return *(_array + index);
+				if (n >= _size)
+					throw std::out_of_range("vector::[] -> index out of range !");
+				return (*(_array + n));
+			}
+			
+			const_reference operator[] (size_type n) const
+			{
+				if (n >= _size)
+					throw std::out_of_range("vector::[] -> index out of range !");
+				return (*(_array + n));
 			}
 
-			const_reference operator[](size_type index) const
+			reference at (size_type n)
 			{
-				return *(_array + index);
+				if (n >= _size)
+					throw std::out_of_range("vector::at -> index out of range !");
+				return (*(_array + n));	
 			}
+			
+			const_reference at (size_type n) const
+			{
+				if (n >= _size)
+					throw std::out_of_range("vector::at -> index out of range !");
+				return (*(_array + n));	
+			}
+
+			reference front()
+			{ return (*(_array)); }
+			
+			const_reference front() const
+			{ return (*(_array)); }
+
+			reference back()
+			{
+				if (_size > 0)
+					return (*(_array + _size - 1));
+				return (*(_array));
+			}
+			
+			const_reference back() const
+			{
+				if (_size > 0)
+					return (*(_array + _size - 1));
+				return (*(_array));
+			}
+
+			value_type* data()
+			{ return _array; }
+
+			const value_type* data() const
+			{ return _array; }
 
 			/*
 			Modifiers:
 			~~~~~~~~~~
 			assign
-			push_back
+			push_back		v
 			pop_back
 			insert
 			erase
 			swap
 			clear
-			emplace (c++11)
-			emplace_back (c++11)
+			emplace			x (c++11)
+			emplace_back	x (c++11)
 			*/
 
-			void push_back(const T& val)
+			void push_back(const value_type& val)
 			{
 				if (_capacity == 0)
 					this->reserve(1);
@@ -229,8 +273,11 @@ namespace ft
 			/*
 			Allocator:
 			~~~~~~~~~~
-			get_allocator
+			get_allocator	v
 			*/
+
+			allocator_type get_allocator() const
+			{ return(_allocator); }
 
 			
 		private :
