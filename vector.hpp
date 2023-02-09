@@ -6,7 +6,7 @@
 /*   By: jpauline <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 17:35:43 by jpauline          #+#    #+#             */
-/*   Updated: 2023/02/06 18:03:04 by jpauline         ###   ########.fr       */
+/*   Updated: 2023/02/09 20:41:16 by jpauline         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,29 +93,75 @@ namespace ft
 			/*
 			Iterators:
 			~~~~~~~~~~
-			begin
-			end
-			rbegin
-			rend
-			cbegin (c++11)
-			cendy (c++11)
-			crbegin (c++11)
-			crend (c++11)
+			begin			v	const	v
+			end				v	const	v
+			rbegin			v	const	v
+			rend			v	const	v
+			cbegin			x (c++11)
+			cendy			x (c++11)
+			crbegin			x (c++11)
+			crend			x (c++11)
 			*/
+
+			iterator				begin()				{ return (iterator(this->_array)); }
+			const_iterator			begin() const		{ return (const_iterator(this->_array)); }
+			iterator				end()				{ return (iterator(this->_array + this->_size)); }
+			const_iterator			end() const			{ return (const_iterator(this->_array + this->_size)); }
+			reverse_iterator		rbegin()			{ return (reverse_iterator(this->end())); }
+			const_reverse_iterator	rbegin() const		{ return (const_reverse_iterator(this->end())); }
+			reverse_iterator		rend()				{ return (reverse_iterator(this->begin())); }
+			const_reverse_iterator	rend() const		{ return (const_reverse_iterator(this->begin())); }
 
 			/*
 			Capacity:
 			~~~~~~~~~
-			size
-			max_size
-			resize
-			capactity
-			empty
-			reserve
-			shrink_to_fit (c++11)
+			size			v
+			max_size		v
+			resize			v
+			capactity		v
+			empty			v
+			reserve			v
+			shrink_to_fit	x (c++11)
 			*/
 
-			void	reserve(size_type new_capacity)
+			size_type size() const
+			{ return this->_size; }
+			
+			size_type max_size() const
+			{ return this->_allocator.max_size(); }
+
+			void resize(size_type n, value_type val = value_type())
+			{
+				if (n > _allocator.max_size())
+					throw std::length_error("vector::resize");
+				if (n == _size)
+					return;
+				if (n < _size)
+				{
+					for (size_type i = n; i < _size; i++)
+						_allocator.destroy(_array + i);
+				}
+				else if (n > _size)
+				{
+					if (n > _capacity)
+						reserve(capacity_reserve_caclulator(n));
+					for (size_type i = _size; i < n; i++)
+						_allocator.construct(_array + i, val);
+				}
+				_size = n;
+			}
+
+			size_type capacity() const
+			{ return this->_capacity; }
+
+			bool empty() const
+			{
+				if (_size == 0)
+					return (true);
+				return (false);
+			}
+
+			void reserve(size_type new_capacity)
 			{
 				if (new_capacity > _allocator.max_size())
 					throw std::length_error("vector::reserve");
@@ -139,7 +185,7 @@ namespace ft
 			/*
 			Element access:
 			~~~~~~~~~~~~~~~
-			operator[]
+			operator[]		v	const	v
 			at
 			front
 			back
@@ -175,7 +221,7 @@ namespace ft
 				if (_capacity == 0)
 					this->reserve(1);
 				else if (_capacity <= _size)
-					this->reserve(capacity_caclulator(_size + 1));
+					this->reserve(capacity_reserve_caclulator(_size + 1));
 				this->_allocator.construct(this->_array + this->_size, val);
 				_size++;
 			}
@@ -189,7 +235,7 @@ namespace ft
 			
 		private :
 
-			size_t	capacity_caclulator(size_t n)
+			size_t	capacity_reserve_caclulator(size_t n)
 			{
 				if (n <= _size * 2)
 					return (_size * 2);
