@@ -251,7 +251,7 @@ namespace ft
 			~~~~~~~~~~
 			assign
 			push_back		v
-			pop_back
+			pop_back		v
 			insert
 			erase
 			swap
@@ -268,6 +268,34 @@ namespace ft
 					this->reserve(capacity_reserve_caclulator(_size + 1));
 				this->_allocator.construct(this->_array + this->_size, val);
 				_size++;
+			}
+
+			void pop_back()
+			{
+				if (_size > 0) //std is apparently not protected
+				{
+					_size--;
+					_allocator.destroy(_array + _size);
+				}
+			}
+
+			void swap(vector & x)
+			{
+				allocator_type tmp_allocator = x.get_allocator();
+				x._allocator = _allocator;
+				_allocator = tmp_allocator;
+
+				size_type tmp_size = x.size();
+				x._size = _size;
+				_size = tmp_size;
+
+				size_type tmp_capacity = x.capacity();
+				x._capacity = _capacity;
+				_capacity = tmp_capacity;
+
+				pointer tmp_array = x._array;
+				x._array = _array;
+				_array = tmp_array;
 			}
 
 			/*

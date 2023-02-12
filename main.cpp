@@ -16,7 +16,7 @@
 #include <vector>
 
 #ifndef NS
-#define NS=ft
+#define NS =ft
 #endif
 
 template<typename T>
@@ -27,6 +27,16 @@ void show_v(NS::vector<T> & v)
         std::cout << n << ", ";
     std::cout << "}; \n";	
 };
+
+template<typename T>
+void show_v(std::string str, NS::vector<T> & v)
+{
+    std::cout << str <<" = { ";
+    for (int n : v)
+        std::cout << n << ", ";
+    std::cout << "}; \n";	
+};
+
 
 
 int main()
@@ -69,10 +79,11 @@ int main()
         crend			x (c++11)
         */
 
-    std::cout << "check Iterators : begin   : " << *(v.begin()) << std::endl;
-    std::cout << "check Iterators : end     : " << *(v.end() - 1) << std::endl;
-    std::cout << "check Iterators : rbegin  : " << *(v.rbegin()) << std::endl;
-    std::cout << "check Iterators : rend    : " << *(v.rend() - 1) << std::endl;
+    std::cout << "check Iterators : begin   : " << *(v.begin()) << "\n";
+    std::cout << "check Iterators : end     : " << *(v.end() - 1) << "\n";
+    std::cout << "check Iterators : rbegin  : " << *(v.rbegin()) << "\n";
+    std::cout << "check Iterators : rend    : " << *(v.rend() - 1) << "\n";
+    std::cout << "................................................" << std::endl;
        
         /*
         Capacity:
@@ -86,24 +97,26 @@ int main()
         shrink_to_fit	x (c++11)
         */
 
-    std::cout << "check Capacity : size     : " << (v.size()) << std::endl;
-    std::cout << "check Capacity : capacity : " << (v.capacity()) << std::endl;
-    std::cout << "check Capacity : max_size : " << (v.max_size()) << std::endl;
-    std::cout << "check Capacity : resize-1 : "; (v.resize(5)); show_v(v);
-    std::cout << "check Capacity : capacity : " << (v.capacity()) << std::endl;
-    std::cout << "check Capacity : resize-2 : "; (v.resize(2)); show_v(v);
-    std::cout << "check Capacity : capacity : " << (v.capacity()) << std::endl;
-    std::cout << "check Capacity : resize-3 : "; (v.resize(5, 1)); show_v(v);
-    std::cout << "check Capacity : capacity : " << (v.capacity()) << std::endl;
-    std::cout << "check Capacity : resize-4 : size : " << (v.size()) << std::endl;
-    std::cout << "check Capacity : capacity : " << (v.capacity()) << std::endl;
-    std::cout << "check Capacity : empty-1  : " << (v.empty()) << std::endl;
-    std::cout << "check Capacity : empty-2  : " << (vEmpty.empty()) << std::endl;
-    std::cout << "check Capacity : reserve8 : " ; (v.reserve(8)); show_v(v);
-    std::cout << "check Capacity : capacity : " << (v.capacity()) << std::endl;
-    std::cout << "check Capacity : reserve25: " ; (v.reserve(25)); show_v(v);
-    std::cout << "check Capacity : capacity : " << (v.capacity()) << std::endl;
-
+    std::cout << "check Capacity : size             : " << (v.size()) << "\n";
+    std::cout << "check Capacity : capacity         : " << (v.capacity()) << "\n";
+    std::cout << "check Capacity : max_size         : " << (v.max_size()) << "\n";
+    std::cout << "check Capacity : resize-1 (5)     : "; (v.resize(5)); show_v(v);
+    std::cout << "check Capacity : capacity         : " << (v.capacity()) << "\n";
+    std::cout << "check Capacity : resize-2 (2)     : "; (v.resize(2)); show_v(v);
+    std::cout << "check Capacity : capacity         : " << (v.capacity()) << "\n";
+    std::cout << "check Capacity : resize-3 (7,1)   : "; (v.resize(7, 1)); show_v(v);
+    std::cout << "check Capacity : capacity         : " << (v.capacity()) << "\n";
+    std::cout << "check Capacity : resize-4 (9,2)   : "; (v.resize(9, 2)); show_v(v);
+    std::cout << "check Capacity : capacity         : " << (v.capacity()) << "\n";
+    std::cout << "check Capacity : resize-5         : size : " << (v.size()) << "\n";
+    std::cout << "check Capacity : capacity         : " << (v.capacity()) << "\n";
+    std::cout << "check Capacity : empty-1          : " << (v.empty()) << "\n";
+    std::cout << "check Capacity : empty-2          : " << (vEmpty.empty()) << "\n";
+    std::cout << "check Capacity : reserve (8)      : " ; (v.reserve(8)); show_v(v);
+    std::cout << "check Capacity : capacity         : " << (v.capacity()) << "\n";
+    std::cout << "check Capacity : reserve (25)     : " ; (v.reserve(25)); show_v(v);
+    std::cout << "check Capacity : capacity         : " << (v.capacity()) << "\n";
+    std::cout << "................................................" << std::endl;
 
         /*
         Element access:
@@ -115,5 +128,32 @@ int main()
         data			v	const	v
         */
 
+    std::cout << "check Access : operator[] ([1])   : " << (v[1]) << "\n";
+    std::cout << "check Access : at (1)             : " << (v.at(1)) << "\n";
+    std::cout << "check Access : front              : " << (v.front()) << "\n";
+    std::cout << "check Access : back               : " << (v.back()) << "\n";
+    std::cout << "check Access : data               : " << (v.data()) << "\n";
+    std::cout << "check Access : assign[]           : " ; (v[1]=42) ; show_v(v);
+    std::cout << "................................................" << std::endl;
+
+        /*
+        Modifiers:
+        ~~~~~~~~~~
+        assign
+        push_back		v
+        pop_back
+        insert
+        erase
+        swap
+        clear
+        emplace			x (c++11)
+        emplace_back	x (c++11)
+        */
+
+    std::cout << "check Modifiers : pop_back        : " ; (v.pop_back()) ; show_v(v);
+    std::cout << "check Modifiers : vEmpty size = " << vEmpty.size() << std::endl;
+//  std::cout << "check Modifiers : pop_back        : " ; (vEmpty.pop_back()) ; show_v("vEmpty", vEmpty); //segfault with std
+    std::cout << "check Modifiers : swap            : " ; (v.swap(vEmpty)) ; show_v("vEmpty", vEmpty); show_v(v);
+    std::cout << "................................................" << std::endl;
 
 }
