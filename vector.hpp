@@ -103,10 +103,10 @@ namespace ft
 			crend			x (c++11)
 			*/
 
-			iterator				begin()				{ return (iterator(this->_array)); }
-			const_iterator			begin() const		{ return (const_iterator(this->_array)); }
-			iterator				end()				{ return (iterator(this->_array + this->_size)); }
-			const_iterator			end() const			{ return (const_iterator(this->_array + this->_size)); }
+			iterator				begin()				{ return (iterator(_array)); }
+			const_iterator			begin() const		{ return (const_iterator(_array)); }
+			iterator				end()				{ return (iterator(_array + _size)); }
+			const_iterator			end() const			{ return (const_iterator(_array + _size)); }
 			reverse_iterator		rbegin()			{ return (reverse_iterator(this->end())); }
 			const_reverse_iterator	rbegin() const		{ return (const_reverse_iterator(this->end())); }
 			reverse_iterator		rend()				{ return (reverse_iterator(this->begin())); }
@@ -253,9 +253,9 @@ namespace ft
 			push_back		v
 			pop_back		v
 			insert
-			erase
-			swap
-			clear
+			erase			v	range	v
+			swap			v
+			clear			v
 			emplace			x (c++11)
 			emplace_back	x (c++11)
 			*/
@@ -266,7 +266,7 @@ namespace ft
 					this->reserve(1);
 				else if (_capacity <= _size)
 					this->reserve(capacity_reserve_caclulator(_size + 1));
-				this->_allocator.construct(this->_array + this->_size, val);
+				_allocator.construct(_array + _size, val);
 				_size++;
 			}
 
@@ -279,11 +279,50 @@ namespace ft
 				}
 			}
 
+			iterator erase (iterator position)
+			{
+				if (this->empty())
+					return (this->end());
+				iterator ite_cur = position;
+				iterator ite_end = this->end();
+
+				for (; (ite_cur + 1) != ite_end; ite_cur++)
+					*ite_cur = *(ite_cur + 1);
+				_allocator.destroy(_array + _size - 1);
+				_size--;
+				return (position);
+			}
+
+			// iterator erase (iterator first, iterator last)
+			// {
+			// 	for (; first != last; last--)
+			// 		erase(first);
+			// 	return (first);
+			// }
+
+			iterator erase (iterator first, iterator last)
+			{
+				if (this->empty() || (last <= first))
+					return(first);
+
+				iterator ite_cur = first;
+				difference_type ite_dif = last - first;
+				iterator ite_end = this->end();
+
+				for (; (ite_cur + 1) != ite_end - ite_dif + 1; ite_cur++)
+					*ite_cur = *(ite_cur + ite_dif);
+				for (difference_type i = 0; i != ite_dif; i++)
+ 					_allocator.destroy(_array + _size - 1 - i);
+
+				_size-= ite_dif;
+				return (first);
+			}
+
 			void swap(vector & x)
 			{
-				allocator_type tmp_allocator = x.get_allocator();
-				x._allocator = _allocator;
-				_allocator = tmp_allocator;
+				// allocator_type tmp_allocator = x.get_allocator();
+				// x._allocator = _allocator;
+				// _allocator = tmp_allocator;
 
 				size_type tmp_size = x.size();
 				x._size = _size;
@@ -296,6 +335,16 @@ namespace ft
 				pointer tmp_array = x._array;
 				x._array = _array;
 				_array = tmp_array;
+			}
+
+			void clear()
+			{
+				if (_size)
+				{
+					for (size_type i = 0; i < _size; i++)
+						this->_allocator.destroy(_array + i);
+					this->_size = 0;
+				}
 			}
 
 			/*

@@ -33,6 +33,13 @@ namespace ft
 		typedef typename Iter::iterator_category	iterator_category;
 	};
 
+	/*
+	Specialization:
+	This type trait may be specialized for user-provided types that may be used as iterators. 
+	The standard library provides partial specializations for pointer types T*,
+	which makes it possible to use all iterator-based algorithms with raw pointers.
+	*/
+
 	template<class T>
 	struct iterator_traits<T*>
 	{
@@ -52,6 +59,7 @@ namespace ft
 		typedef const T&							reference;
 		typedef ft::random_access_iterator_tag		iterator_category;
 	};
+
 }
 
 

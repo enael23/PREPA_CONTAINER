@@ -6,7 +6,7 @@
 /*   By: jpauline <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 13:03:31 by jpauline          #+#    #+#             */
-/*   Updated: 2023/02/09 20:42:22 by jpauline         ###   ########.fr       */
+/*   Updated: 2023/02/13 18:55:23 by jpauline         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,17 @@
 #include <vector>
 
 #ifndef NS
-#define NS =ft
+# define NS ft
 #endif
 
 template<typename T>
 void show_v(NS::vector<T> & v)
 {
     std::cout << "v = { ";
-    for (int n : v)
-        std::cout << n << ", ";
+    //for (int n : v)
+    //    std::cout << n << ", ";
+    for (typename NS::vector<T>::iterator i = v.begin(); i != v.end(); i++)
+        std::cout << *i << ", ";
     std::cout << "}; \n";	
 };
 
@@ -32,8 +34,10 @@ template<typename T>
 void show_v(std::string str, NS::vector<T> & v)
 {
     std::cout << str <<" = { ";
-    for (int n : v)
-        std::cout << n << ", ";
+    //for (int n : v)
+    //    std::cout << n << ", ";
+    for (typename NS::vector<T>::iterator i = v.begin(); i != v.end(); i++)
+        std::cout << *i << ", ";
     std::cout << "}; \n";	
 };
 
@@ -51,10 +55,14 @@ int main()
     v.push_back(7);
  
     // Print out the vector
+    // std::cout << "v = { ";
+    // for (int n : v)
+    //     std::cout << n << ", ";
+    // std::cout << "}; \n";	
     std::cout << "v = { ";
-    for (int n : v)
-        std::cout << n << ", ";
-    std::cout << "}; \n";	
+    for (NS::vector<int>::size_type i = 0; i != v.size(); i++)
+        std::cout << v[i] << ", ";
+    std::cout << "}; \n";
 
     std::cout << "check Template function : show_v: " ; show_v(v);
 
@@ -133,7 +141,7 @@ int main()
     std::cout << "check Access : front              : " << (v.front()) << "\n";
     std::cout << "check Access : back               : " << (v.back()) << "\n";
     std::cout << "check Access : data               : " << (v.data()) << "\n";
-    std::cout << "check Access : assign[]           : " ; (v[1]=42) ; show_v(v);
+    std::cout << "check Access : assign[]           : " ; (v[2]=42) ; show_v(v);
     std::cout << "................................................" << std::endl;
 
         /*
@@ -141,11 +149,11 @@ int main()
         ~~~~~~~~~~
         assign
         push_back		v
-        pop_back
+        pop_back        v
         insert
-        erase
-        swap
-        clear
+        erase           v   range   v
+        swap            v
+        clear           v
         emplace			x (c++11)
         emplace_back	x (c++11)
         */
@@ -153,7 +161,15 @@ int main()
     std::cout << "check Modifiers : pop_back        : " ; (v.pop_back()) ; show_v(v);
     std::cout << "check Modifiers : vEmpty size = " << vEmpty.size() << std::endl;
 //  std::cout << "check Modifiers : pop_back        : " ; (vEmpty.pop_back()) ; show_v("vEmpty", vEmpty); //segfault with std
+    std::cout << "check Modifiers : erase (1)       : " ; (v.erase(v.begin() + 1)) ; show_v(v);
+    std::cout << "check Modifiers : erase (1,3)     : " ; (v.erase(v.begin() + 1, v.begin() + 3)) ; show_v(v);
+    std::cout << "check Modifiers : erase - size    : " << (v.size()) << std::endl;
+//    std::cout << "check Modifiers : erase (3,1)     : " ; (v.erase(v.begin() + 3, v.begin() + 1)) ; show_v(v);  //undefined behavior
+//    std::cout << "check Modifiers : erase - size    : " << (v.size()) << std::endl;
     std::cout << "check Modifiers : swap            : " ; (v.swap(vEmpty)) ; show_v("vEmpty", vEmpty); show_v(v);
+    v.swap(vEmpty); show_v(v);
+    std::cout << "check Modifiers : clear           : " ; (v.clear()) ; show_v(v);
+    std::cout << "check Modifiers : clear  (size)   : " << (v.size()) << std::endl;
     std::cout << "................................................" << std::endl;
 
 }
