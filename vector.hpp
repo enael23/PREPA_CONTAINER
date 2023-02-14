@@ -279,6 +279,139 @@ namespace ft
 				}
 			}
 
+			// iterator insert(iterator position, const value_type& val)
+			// {
+			// 	if (_capacity < _size + 1)
+			// 		reserve(capacity_reserve_caclulator(_size + 1));
+			// 	iterator ite_cur = this->end();
+			// 	iterator ite_stop = position;
+			// 	_allocator.construct(_array + _size, *(ite_cur - 1));
+			// 	ite_cur--;
+			// 	for (; (ite_cur) != ite_stop; ite_cur--)
+			// 		*ite_cur = *(ite_cur - 1);
+			// 	_allocator.destroy(_array + (position - begin()));
+			// 	_allocator.construct(_array + (position - begin()), val);
+			// 	_size++;
+			// 	return(position);
+			// }
+
+
+			// iterator insert(iterator position, const value_type& val)
+			// {
+			// 	if (_capacity < _size + 1)
+			// 		reserve(capacity_reserve_caclulator(_size + 1));
+			// 	iterator ite_cur = this->end();
+			// 	_allocator.construct(_array + _size, *(ite_cur - 1));
+			// 	ite_cur--;
+			// 	for (; (ite_cur) != position; ite_cur--)
+			// 		*ite_cur = *(ite_cur - 1);
+			// 	_allocator.destroy(_array + (position - begin()));
+			// 	_allocator.construct(_array + (position - begin()), val);
+			// 	_size++;
+			// 	return(position);
+			// }
+
+			iterator insert(iterator position, const value_type& val)
+			{
+				if (_capacity < _size + 1)
+					reserve(capacity_reserve_caclulator(_size + 1));
+				iterator ite_cur = this->end();
+				_allocator.construct(_array + _size, *(--ite_cur));
+				for (; (ite_cur) != position; ite_cur--)
+					*ite_cur = *(ite_cur - 1);
+				_allocator.destroy(_array + (position - begin()));
+				_allocator.construct(_array + (position - begin()), val);
+				_size++;
+				return(position);
+			}
+
+			// void insert (iterator position, size_type n, const value_type& val)
+			// {
+			// 	if (n == 0)
+			// 		return;
+			// 	if (_capacity < _size + n)
+			// 		reserve(capacity_reserve_caclulator(_size + n));
+			// 	iterator ite_cur = this->end() + (n - 1);
+			// 	for (size_type i = n; i > 0; i--)
+			// 		_allocator.construct(_array + _size + (i - 1) , *(--ite_cur - (n - 1)));
+			// 	for (; (ite_cur) != position + (n - 1); ite_cur--)
+			// 		*ite_cur = *(ite_cur - n);
+			// 	for (size_type i = n; i > 0; i--)
+			// 	{
+			// 		_allocator.destroy(_array + (position - begin()) + (i - 1));
+			// 		_allocator.construct(_array + (position - begin()) + (i - 1), val);
+			// 	}
+			// 	_size+= n;
+			// 	return;
+			// }
+
+			void insert (iterator position, size_type n, const value_type& val)
+			{
+				if (n == 0)
+					return;
+				if (_capacity < _size + n)
+					reserve(capacity_reserve_caclulator(_size + n));
+				iterator ite_cur = this->end() + (n - 1);
+
+				if (position + n < end())
+				{
+std::cout << "OLD" << std::endl;
+					for (size_type i = n; i > 0; i--)
+						_allocator.construct(_array + _size + (i - 1) , *(--ite_cur - (n - 1)));
+					for (; (ite_cur) != position + (n - 1); ite_cur--)
+						*ite_cur = *(ite_cur - n);
+					for (size_type i = n; i > 0; i--)
+					{
+						_allocator.destroy(_array + (position - begin()) + (i - 1));
+						_allocator.construct(_array + (position - begin()) + (i - 1), val);
+					}
+				}
+				else 
+				{
+std::cout << "NEW" << std::endl;
+std::cout << "end - position = " << (end() - position) << std::endl;
+					for (size_type i = 0; i < (end() - position); i--) 							// A MODIFIER
+						_allocator.construct(_array + _size + n - i , *(--ite_cur - (n - 1))); 	// A MODIFIER
+					for (size_type i = n; i > 0; i--)
+					{
+						_allocator.destroy(_array + (position - begin()) + (i - 1));
+						_allocator.construct(_array + (position - begin()) + (i - 1), val);
+					}
+				}
+				_size+= n;
+				return;
+			}
+
+// 			void insert (iterator position, size_type n, const value_type& val)
+// 			{
+// 				if (n == 0)
+// 					return;
+// 				if (_capacity < _size + n)
+// 					reserve(capacity_reserve_caclulator(_size + n));
+// std::cout << "TOTO_1" << std::endl;
+// 				iterator ite_cur = this->end() + (n - 1);
+// std::cout << "TOTO_2" << std::endl;
+// 				for (size_type i = n; i > 0; i--)
+// 					_allocator.construct(_array + _size + (i - 1) , *(--ite_cur - (n - 1)));
+// std::cout << "TOTO_3" << std::endl;
+// 				for (; (ite_cur) != position + (n - 1); ite_cur--)
+// 				{
+// std::cout << "BOB" << std::endl;
+// std::cout << "ite_cur = " << ite_cur - begin() << std::endl;
+// std::cout << "value = " << *(ite_cur) << std::endl;
+// 					*ite_cur = *(ite_cur - n);
+// 				}
+// std::cout << "TOTO_4 l" << std::endl;
+// 				for (size_type i = n; i > 0; i--)
+// 				{
+// 					_allocator.destroy(_array + (position - begin()) + (i - 1));
+// 					_allocator.construct(_array + (position - begin()) + (i - 1), val);
+// 				}
+// std::cout << "TOTO_5" << std::endl;
+// 				_size+= n;
+// 				return;
+// 			}
+
 			iterator erase (iterator position)
 			{
 				if (this->empty())
@@ -366,8 +499,6 @@ namespace ft
 				return (n);
 			}
 
-
-
 	};
 
 
@@ -375,7 +506,16 @@ namespace ft
 
 /*
 Non-member function overloads:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 relational operators
+
+	template <class T, class Alloc>  bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>  bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>  bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>  bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>  bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+	template <class T, class Alloc>  bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+
 swap
 */
 	

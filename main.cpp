@@ -45,6 +45,9 @@ void show_v(std::string str, NS::vector<T> & v)
 
 int main()
 {
+    time_t start, end;
+    time(&start);
+
     // Create a vector containing integers
     NS::vector<int> v;
     NS::vector<int> vEmpty;
@@ -159,6 +162,12 @@ int main()
         */
 
     std::cout << "check Modifiers : pop_back        : " ; (v.pop_back()) ; show_v(v);
+    std::cout << "check Modifiers : insert (p5,7)   : " ; (v.insert(v.begin() + 5, 7)) ; show_v(v);
+    std::cout << "check Capacity  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";;
+    std::cout << "check Modifiers : insert (p4,4,8) : " ; (v.insert(v.begin() + 4, 4, 8)) ; show_v(v);
+    std::cout << "check Capacity  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
+    std::cout << "check Modifiers : insert (p4,10,9) : " ; (v.insert(v.begin() + 4, 10, 9)) ; show_v(v);
+    std::cout << "check Capacity  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
     std::cout << "check Modifiers : vEmpty size = " << vEmpty.size() << std::endl;
 //  std::cout << "check Modifiers : pop_back        : " ; (vEmpty.pop_back()) ; show_v("vEmpty", vEmpty); //segfault with std
     std::cout << "check Modifiers : erase (1)       : " ; (v.erase(v.begin() + 1)) ; show_v(v);
@@ -171,5 +180,16 @@ int main()
     std::cout << "check Modifiers : clear           : " ; (v.clear()) ; show_v(v);
     std::cout << "check Modifiers : clear  (size)   : " << (v.size()) << std::endl;
     std::cout << "................................................" << std::endl;
+
+
+
+    time(&end);
+  
+    // Calculating total time taken by the program.
+    double time_taken = double(end - start);
+    std::cout << "Time taken by program is : " << std::fixed
+         << time_taken;
+    std::cout << " sec " << std::endl;
+    return 0;
 
 }
