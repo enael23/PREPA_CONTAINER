@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef ENABLE_IF
-#define ENABLE_IF
+# define ENABLE_IF
 
 namespace ft
 {

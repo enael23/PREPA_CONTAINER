@@ -77,6 +77,33 @@ int main()
 //	std::cout << "v2[0] = " << v2[0] << std::endl;
 
 
+
+
+
+    NS::vector<int> u;
+
+    u.push_back(1);
+    u.push_back(2);
+    u.push_back(3);
+    u.push_back(4);
+    u.push_back(5);
+    u.push_back(6);
+    u.push_back(7);
+    u.push_back(8);
+    u.push_back(9);
+
+        /*
+        MEMBER FUNCTIONS
+        ~~~~~~~~~~~~~~~~
+        (constructor)
+        (destructor)
+        operator= (assign content)
+        */
+
+    std::cout << "Copy constructor (range)  : "; show_v(u);
+    std::cout << "Copy constructor (range)  : "; NS::vector<int> w(u.begin(), u.end()); show_v("w", w);       
+
+
         /*
         Iterators:
         ~~~~~~~~~~
@@ -167,6 +194,23 @@ int main()
     std::cout << "check Modifiers : insert (p4,4,8) : " ; (v.insert(v.begin() + 4, 4, 8)) ; show_v(v);
     std::cout << "check Capacity  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
     std::cout << "check Modifiers : insert (p4,10,9) : " ; (v.insert(v.begin() + 4, 10, 9)) ; show_v(v);
+    std::cout << "check Capacity  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
+    std::cout << "check Modifiers : insert (p4,45,3) : " ; (v.insert(v.begin() + 4, 45, 3)) ; show_v(v);
+    std::cout << "check Capacity  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
+
+    // NS::vector<int> u;
+
+    // u.push_back(1);
+    // u.push_back(2);
+    // u.push_back(3);
+    // u.push_back(4);
+    // u.push_back(5);
+    // u.push_back(6);
+    // u.push_back(7);
+    // u.push_back(8);
+    // u.push_back(9);
+
+    std::cout << "check Modifiers : insert (p4,b,e) : " ; (v.insert(v.begin() + 4, v.begin(), v.end())) ; show_v(v);
     std::cout << "check Capacity  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
     std::cout << "check Modifiers : vEmpty size = " << vEmpty.size() << std::endl;
 //  std::cout << "check Modifiers : pop_back        : " ; (vEmpty.pop_back()) ; show_v("vEmpty", vEmpty); //segfault with std

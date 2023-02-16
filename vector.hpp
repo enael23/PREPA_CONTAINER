@@ -18,6 +18,8 @@
 
 #include "random_access_iterator.hpp"
 #include "reverse_iterator.hpp"
+#include "enable_if.hpp"
+#include "is_integral.hpp"
 
 namespace ft
 {
@@ -80,13 +82,41 @@ namespace ft
 				std::cout << "VECTOR CONSTRUCTED (DEFAULT)" << std::endl;
 			}
 
+			// Range Constructor
+			template <class InputIterator>
+			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0) :
+				_allocator(alloc), _size(0), _capacity(0), _array(NULL)
+			{
+				InputIterator	tmp;
+				size_t			range_size;
+
+				/*get size + set capacity and size*/
+				range_size = 0;
+				for (tmp  = first; tmp != last ; tmp++)
+					range_size++;
+				this->_size = range_size;
+				this->_capacity = range_size;
+
+				if (range_size > 0)
+				{
+					_array = _allocator.allocate(this->_capacity);
+					pointer ptr = this->_array;
+					for (;first != last; first++)
+					{
+						this->_allocator.construct(ptr, *first);
+						ptr++;
+					}
+				}
+				return;
+			}
+
 			virtual ~vector() 
 			{
 				
 				for (size_t i = 0;  i < _size; i++)
 						this->_allocator.destroy(this->_array + i);
 				_allocator.deallocate(_array,_size);
-				std::cout << "VECTOR DESTRUCTED" << std::endl;
+//				std::cout << "VECTOR DESTRUCTED" << std::endl;
 			};
 
 
@@ -173,11 +203,15 @@ namespace ft
 					if (i < _size)
 					{
 						_allocator.construct(new_array + i, *(_array + i));
+//std::cout << "---------------reverse destroy i = " << i << std::endl;
 						_allocator.destroy(_array + i);  
 					}
 				}
+//std::cout << "---------------full arraycapacity deallocate" << std::endl;				
 				if (_capacity != 0)
 					_allocator.deallocate(_array, _capacity);
+
+//std::cout << "---------------full arraycapacity deallocate OK" << std::endl;
 				_capacity = new_capacity;
 				_array = new_array;
 			}
@@ -311,76 +345,42 @@ namespace ft
 			// 	return(position);
 			// }
 
-			iterator insert(iterator position, const value_type& val)
-			{
-				if (_capacity < _size + 1)
-					reserve(capacity_reserve_caclulator(_size + 1));
-				iterator ite_cur = this->end();
-				_allocator.construct(_array + _size, *(--ite_cur));
-				for (; (ite_cur) != position; ite_cur--)
-					*ite_cur = *(ite_cur - 1);
-				_allocator.destroy(_array + (position - begin()));
-				_allocator.construct(_array + (position - begin()), val);
-				_size++;
-				return(position);
-			}
+// 			void insert (iterator position, size_type n, const value_type& val)
+// 			{
+// 				if (n == 0)
+// 					return;
+// 				if (_capacity < _size + n)
+// 					reserve(capacity_reserve_caclulator(_size + n));
+// 				iterator ite_cur = this->end() + (n - 1);
 
-			// void insert (iterator position, size_type n, const value_type& val)
-			// {
-			// 	if (n == 0)
-			// 		return;
-			// 	if (_capacity < _size + n)
-			// 		reserve(capacity_reserve_caclulator(_size + n));
-			// 	iterator ite_cur = this->end() + (n - 1);
-			// 	for (size_type i = n; i > 0; i--)
-			// 		_allocator.construct(_array + _size + (i - 1) , *(--ite_cur - (n - 1)));
-			// 	for (; (ite_cur) != position + (n - 1); ite_cur--)
-			// 		*ite_cur = *(ite_cur - n);
-			// 	for (size_type i = n; i > 0; i--)
-			// 	{
-			// 		_allocator.destroy(_array + (position - begin()) + (i - 1));
-			// 		_allocator.construct(_array + (position - begin()) + (i - 1), val);
-			// 	}
-			// 	_size+= n;
-			// 	return;
-			// }
-
-			void insert (iterator position, size_type n, const value_type& val)
-			{
-				if (n == 0)
-					return;
-				if (_capacity < _size + n)
-					reserve(capacity_reserve_caclulator(_size + n));
-				iterator ite_cur = this->end() + (n - 1);
-
-				if (position + n < end())
-				{
-std::cout << "OLD" << std::endl;
-					for (size_type i = n; i > 0; i--)
-						_allocator.construct(_array + _size + (i - 1) , *(--ite_cur - (n - 1)));
-					for (; (ite_cur) != position + (n - 1); ite_cur--)
-						*ite_cur = *(ite_cur - n);
-					for (size_type i = n; i > 0; i--)
-					{
-						_allocator.destroy(_array + (position - begin()) + (i - 1));
-						_allocator.construct(_array + (position - begin()) + (i - 1), val);
-					}
-				}
-				else 
-				{
-std::cout << "NEW" << std::endl;
-std::cout << "end - position = " << (end() - position) << std::endl;
-					for (size_type i = 0; i < (end() - position); i--) 							// A MODIFIER
-						_allocator.construct(_array + _size + n - i , *(--ite_cur - (n - 1))); 	// A MODIFIER
-					for (size_type i = n; i > 0; i--)
-					{
-						_allocator.destroy(_array + (position - begin()) + (i - 1));
-						_allocator.construct(_array + (position - begin()) + (i - 1), val);
-					}
-				}
-				_size+= n;
-				return;
-			}
+// 				if (position + n < end())
+// 				{
+// std::cout << "OLD" << std::endl;
+// 					for (size_type i = n; i > 0; i--)
+// 						_allocator.construct(_array + _size + (i - 1) , *(--ite_cur - (n - 1)));
+// 					for (; (ite_cur) != position + (n - 1); ite_cur--)
+// 						*ite_cur = *(ite_cur - n);
+// 					for (size_type i = n; i > 0; i--)
+// 					{
+// 						_allocator.destroy(_array + (position - begin()) + (i - 1));
+// 						_allocator.construct(_array + (position - begin()) + (i - 1), val);
+// 					}
+// 				}
+// 				else 
+// 				{
+// std::cout << "NEW" << std::endl;
+// std::cout << "end - position = " << (end() - position) << std::endl;
+// 					for (size_type i = 0; i < (end() - position); i--) 							// A MODIFIER
+// 						_allocator.construct(_array + _size + n - i , *(--ite_cur - (n - 1))); 	// A MODIFIER
+// 					for (size_type i = n; i > 0; i--)
+// 					{
+// 						_allocator.destroy(_array + (position - begin()) + (i - 1));
+// 						_allocator.construct(_array + (position - begin()) + (i - 1), val);
+// 					}
+// 				}
+// 				_size+= n;
+// 				return;
+// 			}
 
 // 			void insert (iterator position, size_type n, const value_type& val)
 // 			{
@@ -411,6 +411,187 @@ std::cout << "end - position = " << (end() - position) << std::endl;
 // 				_size+= n;
 // 				return;
 // 			}
+
+
+			iterator insert(iterator position, const value_type& val)
+			{
+				if (_capacity < _size + 1)
+					reserve(capacity_reserve_caclulator(_size + 1));
+				iterator ite_cur = this->end();
+				_allocator.construct(_array + _size, *(--ite_cur));
+				for (; (ite_cur) != position; ite_cur--)
+					*ite_cur = *(ite_cur - 1);
+				_allocator.destroy(_array + (position - begin()));
+				_allocator.construct(_array + (position - begin()), val);
+				_size++;
+				return(position);
+			}
+
+
+			void insert (iterator position, size_type n, const value_type& val)
+			{
+				difference_type pos = position - begin();
+				if (n == 0)
+					return;
+				if (_capacity < _size + n)
+					reserve(capacity_reserve_caclulator(_size + n));
+				iterator ite_cur = this->end() + (n - 1);
+				position = begin() + pos;
+				while (ite_cur >= this->end() && ite_cur >= position + n)
+				{
+					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
+					ite_cur--;
+				}
+				while (ite_cur >= position + n)
+				{
+					*ite_cur = *(ite_cur - n);
+					ite_cur--;
+				}
+				while (ite_cur >= position)
+				{
+					if (ite_cur < end())
+						_allocator.destroy(_array + (ite_cur - begin()));
+					_allocator.construct(_array + (ite_cur - begin()), val);
+					ite_cur--;
+				}
+				_size+= n;
+				return;
+			}
+
+			template <class InputIterator>
+			void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0)
+			{
+				if (last <= first)
+					return;
+				size_type n = 0;
+
+				vector<T, Alloc> v_tmp(first, last);
+				
+				for (; first != last; first++)
+					n++;
+
+				difference_type pos = position - begin();
+				if (_capacity < _size + n)
+					reserve(capacity_reserve_caclulator(_size + n));
+				position = begin() + pos;
+				iterator ite_cur = this->end() + (n - 1);
+
+				while (ite_cur >= this->end() && ite_cur >= position + n)
+				{
+					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
+					ite_cur--;
+				} 
+				while (ite_cur >= position + n)
+				{
+					*ite_cur = *(ite_cur - n);
+					ite_cur--;
+				}
+				iterator new_last = v_tmp.end();
+
+				while (ite_cur >= position)
+				{
+					if (ite_cur < end())
+						_allocator.destroy(_array + (ite_cur - begin()));
+					new_last--;	
+					_allocator.construct(_array + (ite_cur - begin()), *new_last);
+					ite_cur--;
+				}
+				_size+= n;
+				return;
+
+			}
+
+
+// 			void insert (iterator position, size_type n, const value_type& val)
+// 			{
+// difference_type pos = position - begin();
+// 				if (n == 0)
+// 					return;
+// 				if (_capacity < _size + n)
+// 					reserve(capacity_reserve_caclulator(_size + n));
+// 				iterator ite_cur = this->end() + (n - 1);
+// position = begin() + pos;
+// 				while (ite_cur >= this->end() && ite_cur >= position + n)
+// 				{
+// //std::cout << "phase 1 sur " << (ite_cur - begin()) << std::endl;
+// 					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
+// 					ite_cur--;
+// 				}
+// //std::cout << "N = " << n << " POSITON + N = " << (position - begin() + n) << std::endl; 
+// 				while (ite_cur >= position + n)
+// 				{
+// //std::cout << "phase 2 sur " << (ite_cur - begin()) << std::endl;
+// 					*ite_cur = *(ite_cur - n);
+// 					ite_cur--;
+// 				}
+// 				while (ite_cur >= position)
+// 				{
+// //std::cout << "phase 3 sur " << (ite_cur - begin()) << std::endl;
+// 					if (ite_cur < end())
+// 						_allocator.destroy(_array + (ite_cur - begin()));
+// 					_allocator.construct(_array + (ite_cur - begin()), val);
+// 					ite_cur--;
+// 				}
+// 				_size+= n;
+// 				return;
+// 			}
+
+// 			template <class InputIterator>
+// 			void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0)
+// 			{
+// 				if (last <= first)
+// 					return;
+// 				size_type n = 0;
+
+// 				vector<T, Alloc> v_tmp(first, last);
+// //std::cout << "BLOOP-0\n";
+// //std::cout << "V_TMP SIZE = " << v_tmp.size() << std::endl;
+// //std::cout << "V_TMP first = " << *v_tmp.begin();
+// //std::cout << "V_TMP first = " << *(v_tmp.end() - 1);
+				
+// 				for (; first != last; first++)
+// 					n++;
+
+
+// 				difference_type pos = position - begin();
+// 				if (_capacity < _size + n)
+// 					reserve(capacity_reserve_caclulator(_size + n));
+// 				position = begin() + pos;
+// 				iterator ite_cur = this->end() + (n - 1);
+
+// 				while (ite_cur >= this->end() && ite_cur >= position + n)
+// 				{
+// //std::cout << "phase 1 sur " << (ite_cur - begin()) << std::endl;
+// 					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
+// 					ite_cur--;
+// 				}
+// //std::cout << "N = " << n << " POSITON + N = " << (position - begin() + n) << std::endl; 
+// 				while (ite_cur >= position + n)
+// 				{
+// //std::cout << "phase 2 sur " << (ite_cur - begin()) << std::endl;
+// 					*ite_cur = *(ite_cur - n);
+// 					ite_cur--;
+// 				}
+// 				iterator new_last = v_tmp.end();
+
+// 				while (ite_cur >= position)
+// 				{
+// //std::cout << "phase 3 sur " << (ite_cur - begin()) << std::endl;
+// 					if (ite_cur < end())
+// 						_allocator.destroy(_array + (ite_cur - begin()));
+// //std::cout << "BLOOP-1\n";
+// 					new_last--;
+// //std::cout << "BLOOP-2\n";		
+// 					_allocator.construct(_array + (ite_cur - begin()), *new_last);
+// //std::cout << "BLOOP-3\n";
+// 					ite_cur--;
+// 				}
+// 				_size+= n;
+// 				return;
+
+// 			}
+
+
 
 			iterator erase (iterator position)
 			{

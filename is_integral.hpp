@@ -17,7 +17,7 @@ namespace ft
 {
 	//Default false case
 	template<typename T>
-	struct is_integral {static bool value = false;};
+	struct is_integral {static const bool value = false;};
 
 	//True specilization for integral types
 	template<> struct is_integral<bool>						{static const bool value = true;};
