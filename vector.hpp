@@ -72,9 +72,9 @@ namespace ft
 			/*
 			MEMBER FUNCTIONS
 			~~~~~~~~~~~~~~~~
-			(constructor)
-			(destructor)
-			operator= (assign content)
+			(constructor)				default		v	fill	x	range	x	copy	v
+			(destructor)				v
+			operator= (assign content)	x
 			*/
 
 			explicit vector(const allocator_type & alloc = allocator_type()) : _allocator(alloc), _size(0), _capacity(0), _array(NULL)
@@ -283,16 +283,40 @@ namespace ft
 			/*
 			Modifiers:
 			~~~~~~~~~~
-			assign
+			assign				fill	v	range	v
 			push_back		v
 			pop_back		v
-			insert
+			insert			v	fill	v	range	v
 			erase			v	range	v
 			swap			v
 			clear			v
 			emplace			x (c++11)
 			emplace_back	x (c++11)
 			*/
+
+			void	assign(size_t n, const value_type &val)
+			{
+				clear();
+				if (n == 0)
+					return;
+				_size = n;
+				if (_capacity < n)
+				{
+					if (_capacity)
+						_allocator.deallocate(_array, _capacity);
+					_capacity = n;
+					_array = _allocator.allocate(_capacity);
+				}
+				for (size_type i = 0; i < n; i++)
+					_allocator.construct(_array + i, val);
+			}
+
+			template <class InputIterator>
+			void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0)
+			{
+				clear();
+				insert(begin(), first, last);
+			}
 
 			void push_back(const value_type& val)
 			{
@@ -312,23 +336,6 @@ namespace ft
 					_allocator.destroy(_array + _size);
 				}
 			}
-
-			// iterator insert(iterator position, const value_type& val)
-			// {
-			// 	if (_capacity < _size + 1)
-			// 		reserve(capacity_reserve_caclulator(_size + 1));
-			// 	iterator ite_cur = this->end();
-			// 	iterator ite_stop = position;
-			// 	_allocator.construct(_array + _size, *(ite_cur - 1));
-			// 	ite_cur--;
-			// 	for (; (ite_cur) != ite_stop; ite_cur--)
-			// 		*ite_cur = *(ite_cur - 1);
-			// 	_allocator.destroy(_array + (position - begin()));
-			// 	_allocator.construct(_array + (position - begin()), val);
-			// 	_size++;
-			// 	return(position);
-			// }
-
 
 			// iterator insert(iterator position, const value_type& val)
 			// {

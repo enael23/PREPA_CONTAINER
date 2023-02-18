@@ -177,19 +177,31 @@ int main()
         /*
         Modifiers:
         ~~~~~~~~~~
-        assign
+        assign				fill	v	range	v
         push_back		v
-        pop_back        v
-        insert
-        erase           v   range   v
-        swap            v
-        clear           v
+        pop_back		v
+        insert			v	fill	v	range	v
+        erase			v	range	v
+        swap			v
+        clear			v
         emplace			x (c++11)
         emplace_back	x (c++11)
         */
 
+    std::cout << "check Modifiers : assign u "; show_v("u", u);
+    std::cout << "check Modifiers : assign u - capacity : " << (u.capacity()) << " size : " << (u.size()) << "\n";
+    std::cout << "check Modifiers : assign u "; show_v(v);
+    std::cout << "check Modifiers : assign v - capacity : " << (v.capacity()) << " size : " << (v.size()) << "\n";
+    v.assign(5, 0);
+    show_v(v);
+    std::cout << "check Modifiers : assign v.assign(5,0)    :";
+    std::cout << "check Modifiers : assign u "; show_v(v);
+    std::cout << "check Modifiers : assign v - capacity : " << (v.capacity()) << " size : " << (v.size()) << "\n";
+
+    std::cout << std::endl;
+
     std::cout << "check Modifiers : pop_back        : " ; (v.pop_back()) ; show_v(v);
-    std::cout << "check Modifiers : insert (p5,7)   : " ; (v.insert(v.begin() + 5, 7)) ; show_v(v);
+    std::cout << "check Modifiers : insert (p1,7)   : " ; (v.insert(v.begin() + 1, 7)) ; show_v(v);
     std::cout << "check Capacity  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";;
     std::cout << "check Modifiers : insert (p4,4,8) : " ; (v.insert(v.begin() + 4, 4, 8)) ; show_v(v);
     std::cout << "check Capacity  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
