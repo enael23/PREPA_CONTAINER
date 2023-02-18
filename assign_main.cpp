@@ -83,12 +83,12 @@ int main()
 
     show_v("u", u); show_v(v);
     std::cout << "check u  : capacity        : " << (u.capacity()) << " size : " << (u.size()) << "\n";
-    std::cout << "check v  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
-    v.assign(5, 0);
-    show_v(v);
-    std::cout << "check v  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
-    v.pop_back();
-    show_v(v);
+ //   std::cout << "check v  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
+ //   v.assign(5, 0);
+    u.insert(u.end(), u.begin(), u.end());
+    show_v("u", u);
+ //   std::cout << "check v  : capacity        : " << (v.capacity()) << " size : " << (v.size()) << "\n";
+
 
 
 

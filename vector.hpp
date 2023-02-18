@@ -72,15 +72,30 @@ namespace ft
 			/*
 			MEMBER FUNCTIONS
 			~~~~~~~~~~~~~~~~
-			(constructor)				default		v	fill	x	range	x	copy	v
+			(constructor)				default		v	fill	v	range	v	copy	v
 			(destructor)				v
 			operator= (assign content)	x
 			*/
 
+			// Default constructor
 			explicit vector(const allocator_type & alloc = allocator_type()) : _allocator(alloc), _size(0), _capacity(0), _array(NULL)
 			{
-				std::cout << "VECTOR CONSTRUCTED (DEFAULT)" << std::endl;
+//				std::cout << "VECTOR CONSTRUCTED (DEFAULT)" << std::endl;
 			}
+
+			// Fill constructor
+			vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
+				_allocator(alloc), _size(n), _capacity(n), _array(NULL)
+			{
+				if (n > 0)
+				{
+					_array = _allocator.allocate(_size);
+					for (size_type i = 0; i < n; i++)
+						_allocator.construct(_array + i, val);
+//					std::cout << "VECTOR CONSTRUCTED (FILL)" << std::endl;
+				}
+				return;
+			}	
 
 			// Range Constructor
 			template <class InputIterator>
@@ -90,34 +105,44 @@ namespace ft
 				InputIterator	tmp;
 				size_t			range_size;
 
-				/*get size + set capacity and size*/
 				range_size = 0;
 				for (tmp  = first; tmp != last ; tmp++)
 					range_size++;
-				this->_size = range_size;
-				this->_capacity = range_size;
+				_size = range_size;
+				_capacity = range_size;
 
 				if (range_size > 0)
 				{
-					_array = _allocator.allocate(this->_capacity);
-					pointer ptr = this->_array;
+					_array = _allocator.allocate(_capacity);
+					pointer ptr = _array;
 					for (;first != last; first++)
 					{
-						this->_allocator.construct(ptr, *first);
+						_allocator.construct(ptr, *first);
 						ptr++;
 					}
+//					std::cout << "VECTOR CONSTRUCTED (RANGE)" << std::endl;
 				}
 				return;
 			}
 
+			// Destrcutor
 			virtual ~vector() 
 			{
 				
 				for (size_t i = 0;  i < _size; i++)
 						this->_allocator.destroy(this->_array + i);
-				_allocator.deallocate(_array,_size);
+				if (_capacity > 0)
+					_allocator.deallocate(_array,_size);
 //				std::cout << "VECTOR DESTRUCTED" << std::endl;
 			};
+
+			// Operator=
+			vector& operator=(const vector& x)
+			{
+				if (this != &x)
+					assign(x.begin(), x.end());
+				return (*this);
+			}
 
 
 			/*
