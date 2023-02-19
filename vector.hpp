@@ -485,6 +485,23 @@ namespace ft
 			// 	return (stop);
 			// }
 
+			// iterator insert(iterator position, const value_type& val)
+			// {
+			// 	difference_type pos = position - begin();
+			// 	if (_capacity < _size + 1)
+			// 		reserve(capacity_reserve_caclulator(_size + 1));
+			// 	iterator ite_cur = end();
+			// 	position = begin() + pos;
+			// 	_allocator.construct(_array + _size, *(--ite_cur));
+			// 	for (; (ite_cur) != position; ite_cur--)
+			// 		*ite_cur = *(ite_cur - 1);
+			// 	_allocator.destroy(_array + (position - begin()));
+			// 	_allocator.construct(_array + (position - begin()), val);
+			// 	_size++;
+			// 	return(begin() + pos);
+			// }
+
+
 			iterator insert(iterator position, const value_type& val)
 			{
 				difference_type pos = position - begin();
@@ -492,10 +509,13 @@ namespace ft
 					reserve(capacity_reserve_caclulator(_size + 1));
 				iterator ite_cur = end();
 				position = begin() + pos;
+				if (_size && position != ite_cur)
+				{
 				_allocator.construct(_array + _size, *(--ite_cur));
 				for (; (ite_cur) != position; ite_cur--)
 					*ite_cur = *(ite_cur - 1);
 				_allocator.destroy(_array + (position - begin()));
+				}
 				_allocator.construct(_array + (position - begin()), val);
 				_size++;
 				return(begin() + pos);
@@ -503,19 +523,28 @@ namespace ft
 
 // 			iterator insert(iterator position, const value_type& val)
 // 			{
+// //std::cout << "SIZE = " << _size << "\n";
 // 				difference_type pos = position - begin();
 // std::cout << "I0_0\n";
 // 				if (_capacity < _size + 1)
 // 					reserve(capacity_reserve_caclulator(_size + 1));
 // std::cout << "I0_1\n";
 // 				iterator ite_cur = end();
+// 				position = begin() + pos;
 // std::cout << "I0_2\n";
+// 				if (_size && position != ite_cur)
+// 				{
 // 				_allocator.construct(_array + _size, *(--ite_cur));
 // std::cout << "I0_3\n";
 // 				for (; (ite_cur) != position; ite_cur--)
+// {
+// //std::cout << "BOUCLE INSERT SINGLE ";
+// //std::cout << "size = " << _size << "\n" ;
 // 					*ite_cur = *(ite_cur - 1);
+// }
 // std::cout << "I0_4\n";
 // 				_allocator.destroy(_array + (position - begin()));
+// 				}
 // std::cout << "I0_5\n";
 // 				_allocator.construct(_array + (position - begin()), val);
 // std::cout << "I0_6\n";
