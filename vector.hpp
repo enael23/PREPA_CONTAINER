@@ -75,7 +75,7 @@ namespace ft
 			~~~~~~~~~~~~~~~~
 			(constructor)				default		v	fill	v	range	v	copy	v
 			(destructor)				v
-			operator= (assign content)	x
+			operator= (assign content)	v
 			*/
 
 			// Default constructor
@@ -812,10 +812,12 @@ swap
 	template <class T, class Alloc>
   	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
+//std::cout << "TOTO op ==\n";
 		if (lhs.size() == rhs.size())
 		{
 			for (size_t i = 0; i < lhs.size(); i++)
 			{
+//std::cout << "TOTO op == i = " << i << "\n";
 				if (lhs[i] != rhs[i])
 					return false;
 			}
@@ -827,38 +829,41 @@ swap
   	template <class T, class Alloc>
 	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return !(lhs == rhs);
+//std::cout << "TOTO op !=\n";
+		return !(lhs == rhs); 
 	}
 
 	template <class T, class Alloc>
 	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
+//std::cout << "TOTO op <\n";
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class T, class Alloc>
 	bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return (lhs > rhs);
+//std::cout << "TOTO op >\n";
+		return (rhs < lhs);
 	}
 
 	template <class T, class Alloc>
 	bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
+//std::cout << "TOTO op <=\n";
 		return !(lhs > rhs);
 	}
 
 	template <class T, class Alloc>
 	bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return !(lhs < rhs);		
+//std::cout << "TOTO op >=\n";
+		return !(lhs < rhs);
 	}
 
 	template <class T, class Alloc>
 	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
-	{
-		x.swap(y);
-	}
+	{ x.swap(y); }
 	
 }
 

@@ -51,11 +51,10 @@ namespace ft
 				return *this;
 			}
 			
-		/* 
-			Potentiellement necessaire pour copier un const iterator a partir d'un iterator
+		/* Necessaire pour creer un const iterator a partir d'un iterator, sinon ca ne compile pas */
 			operator random_access_iterator<T const>() const
 			{ return random_access_iterator<T const>(this->_ptr); } 
-		*/
+		
 
 			//Le getteur s'appelle 'base' pour les iterators
 			pointer base() const

@@ -239,6 +239,32 @@ int main()
 
 
 
+    /*
+    Non-member function overloads:
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    relational operators
+
+        template <class T, class Alloc>  bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+        template <class T, class Alloc>  bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+        template <class T, class Alloc>  bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+        template <class T, class Alloc>  bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+        template <class T, class Alloc>  bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+        template <class T, class Alloc>  bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+
+    swap
+    */
+
+    NS::vector<int> foo (3,100);   // three ints with a value of 100
+    NS::vector<int> bar (2,200);   // two ints with a value of 200
+
+    std::cout << "check relational op : ==      : "; if (foo==bar) std::cout << "foo and bar are equal";                std::cout << "\n";
+    std::cout << "check relational op : !=      : "; if (foo!=bar) std::cout << "foo and bar are not equal";            std::cout << "\n";
+    std::cout << "check relational op : <       : "; if (foo< bar) std::cout << "foo is less than bar";                 std::cout << "\n";
+    std::cout << "check relational op : >       : "; if (foo> bar) std::cout << "foo is greater than bar";              std::cout << "\n";
+    std::cout << "check relational op : <=      : "; if (foo<=bar) std::cout << "foo is less than or equal to bar";     std::cout << "\n";
+    std::cout << "check relational op : >=      : "; if (foo>=bar) std::cout << "foo is greater than or equal to bar";  std::cout << "\n";
+
+
     time(&end);
   
     // Calculating total time taken by the program.
