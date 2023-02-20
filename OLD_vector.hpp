@@ -248,11 +248,15 @@ namespace ft
 					if (i < _size)
 					{
 						_allocator.construct(new_array + i, *(_array + i));
+// std::cout << "---------------reverse destroy i = " << i << std::endl;
 						_allocator.destroy(_array + i);  
 					}
-				}				
+				}
+// std::cout << "---------------full arraycapacity deallocate" << std::endl;				
 				if (_capacity != 0)
 					_allocator.deallocate(_array, _capacity);
+
+// std::cout << "---------------full arraycapacity deallocate OK" << std::endl;
 				_capacity = n;
 				_array = new_array;
 			}
@@ -378,6 +382,126 @@ namespace ft
 				}
 			}
 
+			// iterator insert(iterator position, const value_type& val)
+			// {
+			// 	if (_capacity < _size + 1)
+			// 		reserve(capacity_reserve_caclulator(_size + 1));
+			// 	iterator ite_cur = this->end();
+			// 	_allocator.construct(_array + _size, *(ite_cur - 1));
+			// 	ite_cur--;
+			// 	for (; (ite_cur) != position; ite_cur--)
+			// 		*ite_cur = *(ite_cur - 1);
+			// 	_allocator.destroy(_array + (position - begin()));
+			// 	_allocator.construct(_array + (position - begin()), val);
+			// 	_size++;
+			// 	return(position);
+			// }
+
+// 			void insert (iterator position, size_type n, const value_type& val)
+// 			{
+// 				if (n == 0)
+// 					return;
+// 				if (_capacity < _size + n)
+// 					reserve(capacity_reserve_caclulator(_size + n));
+// 				iterator ite_cur = this->end() + (n - 1);
+
+// 				if (position + n < end())
+// 				{
+// std::cout << "OLD" << std::endl;
+// 					for (size_type i = n; i > 0; i--)
+// 						_allocator.construct(_array + _size + (i - 1) , *(--ite_cur - (n - 1)));
+// 					for (; (ite_cur) != position + (n - 1); ite_cur--)
+// 						*ite_cur = *(ite_cur - n);
+// 					for (size_type i = n; i > 0; i--)
+// 					{
+// 						_allocator.destroy(_array + (position - begin()) + (i - 1));
+// 						_allocator.construct(_array + (position - begin()) + (i - 1), val);
+// 					}
+// 				}
+// 				else 
+// 				{
+// std::cout << "NEW" << std::endl;
+// std::cout << "end - position = " << (end() - position) << std::endl;
+// 					for (size_type i = 0; i < (end() - position); i--) 							// A MODIFIER
+// 						_allocator.construct(_array + _size + n - i , *(--ite_cur - (n - 1))); 	// A MODIFIER
+// 					for (size_type i = n; i > 0; i--)
+// 					{
+// 						_allocator.destroy(_array + (position - begin()) + (i - 1));
+// 						_allocator.construct(_array + (position - begin()) + (i - 1), val);
+// 					}
+// 				}
+// 				_size+= n;
+// 				return;
+// 			}
+
+// 			void insert (iterator position, size_type n, const value_type& val)
+// 			{
+// 				if (n == 0)
+// 					return;
+// 				if (_capacity < _size + n)
+// 					reserve(capacity_reserve_caclulator(_size + n));
+// std::cout << "TOTO_1" << std::endl;
+// 				iterator ite_cur = this->end() + (n - 1);
+// std::cout << "TOTO_2" << std::endl;
+// 				for (size_type i = n; i > 0; i--)
+// 					_allocator.construct(_array + _size + (i - 1) , *(--ite_cur - (n - 1)));
+// std::cout << "TOTO_3" << std::endl;
+// 				for (; (ite_cur) != position + (n - 1); ite_cur--)
+// 				{
+// std::cout << "BOB" << std::endl;
+// std::cout << "ite_cur = " << ite_cur - begin() << std::endl;
+// std::cout << "value = " << *(ite_cur) << std::endl;
+// 					*ite_cur = *(ite_cur - n);
+// 				}
+// std::cout << "TOTO_4 l" << std::endl;
+// 				for (size_type i = n; i > 0; i--)
+// 				{
+// 					_allocator.destroy(_array + (position - begin()) + (i - 1));
+// 					_allocator.construct(_array + (position - begin()) + (i - 1), val);
+// 				}
+// std::cout << "TOTO_5" << std::endl;
+// 				_size+= n;
+// 				return;
+// 			}
+
+/*OPTION BIS*/
+			// iterator insert (iterator position, const value_type& val)
+			// {
+			// 	/*get offset as diff_type*/
+			// 	difference_type offset = position - this->_array;
+			// 	if (_capacity < _size + 1)
+			// 		reserve(capacity_reserve_caclulator(_size + 1));
+			// 	pointer cursor = _array + _size;
+			// 	pointer stop = _array + offset;
+			// 	/*copy each value[n] into value[n+1]*/
+			// 	for(; cursor != stop; cursor--) 
+			// 	{
+			// 		this->_allocator.construct(cursor, *(cursor - 1));
+			// 		this->_allocator.destroy(cursor - 1);
+			// 	}
+			// 	/*now we are read to insert element into position*/
+			// 	this->_allocator.construct(stop, val);
+			// 	_size++;
+			// 	return (stop);
+			// }
+
+			// iterator insert(iterator position, const value_type& val)
+			// {
+			// 	difference_type pos = position - begin();
+			// 	if (_capacity < _size + 1)
+			// 		reserve(capacity_reserve_caclulator(_size + 1));
+			// 	iterator ite_cur = end();
+			// 	position = begin() + pos;
+			// 	_allocator.construct(_array + _size, *(--ite_cur));
+			// 	for (; (ite_cur) != position; ite_cur--)
+			// 		*ite_cur = *(ite_cur - 1);
+			// 	_allocator.destroy(_array + (position - begin()));
+			// 	_allocator.construct(_array + (position - begin()), val);
+			// 	_size++;
+			// 	return(begin() + pos);
+			// }
+
+
 			iterator insert(iterator position, const value_type& val)
 			{
 				difference_type pos = position - begin();
@@ -397,25 +521,61 @@ namespace ft
 				return(begin() + pos);
 			}
 
+// 			iterator insert(iterator position, const value_type& val)
+// 			{
+// //std::cout << "SIZE = " << _size << "\n";
+// 				difference_type pos = position - begin();
+// std::cout << "I0_0\n";
+// 				if (_capacity < _size + 1)
+// 					reserve(capacity_reserve_caclulator(_size + 1));
+// std::cout << "I0_1\n";
+// 				iterator ite_cur = end();
+// 				position = begin() + pos;
+// std::cout << "I0_2\n";
+// 				if (_size && position != ite_cur)
+// 				{
+// 				_allocator.construct(_array + _size, *(--ite_cur));
+// std::cout << "I0_3\n";
+// 				for (; (ite_cur) != position; ite_cur--)
+// {
+// //std::cout << "BOUCLE INSERT SINGLE ";
+// //std::cout << "size = " << _size << "\n" ;
+// 					*ite_cur = *(ite_cur - 1);
+// }
+// std::cout << "I0_4\n";
+// 				_allocator.destroy(_array + (position - begin()));
+// 				}
+// std::cout << "I0_5\n";
+// 				_allocator.construct(_array + (position - begin()), val);
+// std::cout << "I0_6\n";
+// 				_size++;
+// 				return(begin() + pos);
+// 			}
+
+
 			void insert (iterator position, size_type n, const value_type& val)
 			{
 				difference_type pos = position - begin();
 				if (n == 0)
 					return;
+// std::cout << "TOTO_0\n";
 				if (_capacity < _size + n)
 					reserve(capacity_reserve_caclulator(_size + n));
 				iterator ite_cur = this->end() + (n - 1);
 				position = begin() + pos;
+// std::cout << "TOTO_1\n";
 				while (ite_cur >= this->end() && ite_cur >= position + n)
 				{
 					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
 					ite_cur--;
 				}
+// std::cout << "TOTO_2\n";
 				while (ite_cur >= position + n)
 				{
 					*ite_cur = *(ite_cur - n);
 					ite_cur--;
 				}
+// std::cout << "TOTO_3\n";
 				while (ite_cur >= position)
 				{
 					if (ite_cur < end())
@@ -423,6 +583,7 @@ namespace ft
 					_allocator.construct(_array + (ite_cur - begin()), val);
 					ite_cur--;
 				}
+// std::cout << "TOTO_4" << std::endl;
 				_size+= n;
 				return;
 			}
@@ -440,16 +601,22 @@ namespace ft
 					n++;
 
 				difference_type pos = position - begin();
+// std::cout << "Temp_TOTO_0\n";
 				if (_capacity < _size + n)
+// {
+// std::cout << "size + n = " << _size + n << " j'envoie le reserve\n";
 					reserve(capacity_reserve_caclulator(_size + n));
+// }
 				position = begin() + pos;
 				iterator ite_cur = this->end() + (n - 1);
 
+// std::cout << "Temp_TOTO_1\n";
 				while (ite_cur >= this->end() && ite_cur >= position + n)
 				{
 					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
 					ite_cur--;
 				} 
+// std::cout << "Temp_TOTO_2\n";
 				while (ite_cur >= position + n)
 				{
 					*ite_cur = *(ite_cur - n);
@@ -457,6 +624,7 @@ namespace ft
 				}
 				iterator new_last = v_tmp.end();
 
+// std::cout << "Temp_TOTO_3\n";
 				while (ite_cur >= position)
 				{
 					if (ite_cur < end())
@@ -465,10 +633,103 @@ namespace ft
 					_allocator.construct(_array + (ite_cur - begin()), *new_last);
 					ite_cur--;
 				}
+// std::cout << "Temp_TOTO_4\n";
 				_size+= n;
 				return;
 
 			}
+
+
+// 			void insert (iterator position, size_type n, const value_type& val)
+// 			{
+// difference_type pos = position - begin();
+// 				if (n == 0)
+// 					return;
+// 				if (_capacity < _size + n)
+// 					reserve(capacity_reserve_caclulator(_size + n));
+// 				iterator ite_cur = this->end() + (n - 1);
+// position = begin() + pos;
+// 				while (ite_cur >= this->end() && ite_cur >= position + n)
+// 				{
+// //std::cout << "phase 1 sur " << (ite_cur - begin()) << std::endl;
+// 					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
+// 					ite_cur--;
+// 				}
+// //std::cout << "N = " << n << " POSITON + N = " << (position - begin() + n) << std::endl; 
+// 				while (ite_cur >= position + n)
+// 				{
+// //std::cout << "phase 2 sur " << (ite_cur - begin()) << std::endl;
+// 					*ite_cur = *(ite_cur - n);
+// 					ite_cur--;
+// 				}
+// 				while (ite_cur >= position)
+// 				{
+// //std::cout << "phase 3 sur " << (ite_cur - begin()) << std::endl;
+// 					if (ite_cur < end())
+// 						_allocator.destroy(_array + (ite_cur - begin()));
+// 					_allocator.construct(_array + (ite_cur - begin()), val);
+// 					ite_cur--;
+// 				}
+// 				_size+= n;
+// 				return;
+// 			}
+
+// 			template <class InputIterator>
+// 			void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0)
+// 			{
+// 				if (last <= first)
+// 					return;
+// 				size_type n = 0;
+
+// 				vector<T, Alloc> v_tmp(first, last);
+// //std::cout << "BLOOP-0\n";
+// //std::cout << "V_TMP SIZE = " << v_tmp.size() << std::endl;
+// //std::cout << "V_TMP first = " << *v_tmp.begin();
+// //std::cout << "V_TMP first = " << *(v_tmp.end() - 1);
+				
+// 				for (; first != last; first++)
+// 					n++;
+
+
+// 				difference_type pos = position - begin();
+// 				if (_capacity < _size + n)
+// 					reserve(capacity_reserve_caclulator(_size + n));
+// 				position = begin() + pos;
+// 				iterator ite_cur = this->end() + (n - 1);
+
+// 				while (ite_cur >= this->end() && ite_cur >= position + n)
+// 				{
+// //std::cout << "phase 1 sur " << (ite_cur - begin()) << std::endl;
+// 					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
+// 					ite_cur--;
+// 				}
+// //std::cout << "N = " << n << " POSITON + N = " << (position - begin() + n) << std::endl; 
+// 				while (ite_cur >= position + n)
+// 				{
+// //std::cout << "phase 2 sur " << (ite_cur - begin()) << std::endl;
+// 					*ite_cur = *(ite_cur - n);
+// 					ite_cur--;
+// 				}
+// 				iterator new_last = v_tmp.end();
+
+// 				while (ite_cur >= position)
+// 				{
+// //std::cout << "phase 3 sur " << (ite_cur - begin()) << std::endl;
+// 					if (ite_cur < end())
+// 						_allocator.destroy(_array + (ite_cur - begin()));
+// //std::cout << "BLOOP-1\n";
+// 					new_last--;
+// //std::cout << "BLOOP-2\n";		
+// 					_allocator.construct(_array + (ite_cur - begin()), *new_last);
+// //std::cout << "BLOOP-3\n";
+// 					ite_cur--;
+// 				}
+// 				_size+= n;
+// 				return;
+
+// 			}
+
+
 
 			iterator erase (iterator position)
 			{
@@ -483,6 +744,13 @@ namespace ft
 				_size--;
 				return (position);
 			}
+
+			// iterator erase (iterator first, iterator last)
+			// {
+			// 	for (; first != last; last--)
+			// 		erase(first);
+			// 	return (first);
+			// }
 
 			iterator erase (iterator first, iterator last)
 			{
@@ -552,6 +820,9 @@ namespace ft
 
 	};
 
+
+
+
 /*
 Non-member function overloads:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -570,10 +841,12 @@ swap
 	template <class T, class Alloc>
   	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
+//std::cout << "TOTO op ==\n";
 		if (lhs.size() == rhs.size())
 		{
 			for (size_t i = 0; i < lhs.size(); i++)
 			{
+//std::cout << "TOTO op == i = " << i << "\n";
 				if (lhs[i] != rhs[i])
 					return false;
 			}
@@ -584,28 +857,47 @@ swap
 
   	template <class T, class Alloc>
 	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	{ return !(lhs == rhs); }
+	{
+//std::cout << "TOTO op !=\n";
+		return !(lhs == rhs); 
+	}
 
 	template <class T, class Alloc>
 	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	{ return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
+	{
+//std::cout << "TOTO op <\n";
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
 
 	template <class T, class Alloc>
 	bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	{ return (rhs < lhs); }
+	{
+//std::cout << "TOTO op >\n";
+		return (rhs < lhs);
+	}
 
 	template <class T, class Alloc>
 	bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	{ return !(lhs > rhs); }
+	{
+//std::cout << "TOTO op <=\n";
+		return !(lhs > rhs);
+	}
 
 	template <class T, class Alloc>
 	bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-	{ return !(lhs < rhs); }
+	{
+//std::cout << "TOTO op >=\n";
+		return !(lhs < rhs);
+	}
 
 	template <class T, class Alloc>
 	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
 	{ x.swap(y); }
 	
 }
+
+
+
+
 
 #endif

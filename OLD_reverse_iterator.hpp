@@ -18,43 +18,43 @@
 namespace ft
 {
 
-	template<typename Iterator>
+	template<typename Iter>
 	class reverse_iterator
 	{
 		private :
 
-			Iterator	_current;
+			Iter	_current;
 
 		public :
 
-			typedef Iterator													iterator_type;
-			typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
-			typedef typename ft::iterator_traits<Iterator>::value_type			value_type;
-			typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
-			typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
-			typedef typename ft::iterator_traits<Iterator>::reference			reference;
+			typedef Iter													iterator_type;
+			typedef typename ft::iterator_traits<Iter>::iterator_category	iterator_category;
+			typedef typename ft::iterator_traits<Iter>::value_type			value_type;
+			typedef typename ft::iterator_traits<Iter>::difference_type		difference_type;
+			typedef typename ft::iterator_traits<Iter>::pointer				pointer;
+			typedef typename ft::iterator_traits<Iter>::reference			reference;
 		
 
 
 		/*COPLIEN*/
 
-			reverse_iterator() : _current(NULL) {}
-			explicit reverse_iterator(iterator_type it) : _current(it) {}
+			reverse_iterator(void) : _current(NULL) {}
+			explicit reverse_iterator(Iter input_iter) : _current(input_iter) {}
 
-			template<class Iter>
-			reverse_iterator(const reverse_iterator<Iter> & src) : _current(src.base()) {}
+			template<class T>
+			reverse_iterator(const reverse_iterator<T> & src) : _current(src.base()) {}
 
 			~reverse_iterator(void) {}
 
-			template<class Iter>
-			reverse_iterator & operator=(const reverse_iterator<Iter> & rhs)
+			template<class T>
+			reverse_iterator & operator=(const reverse_iterator<T> & rhs)
 			{
 				this->_current = rhs.base();
 				return *this;
 			}
 
 			//Le getteur s'appelle 'base' pour les iterators
-			iterator_type base() const { return (this->_current); }
+			Iter base() const { return (this->_current); }
 
 			/* liste des operateurs https://en.cppreference.com/w/cpp/iterator/reverse_iterator */
 
@@ -73,13 +73,13 @@ namespace ft
 
 /* *  */	reference operator*() const
 			{
-				iterator_type tmp = this->_current;
+				Iter tmp = this->_current;
 				return (*--tmp);
 			}
 
 /* -> */	pointer operator->() const
 			{
-				iterator_type tmp = this->_current;
+				Iter tmp = this->_current;
 				return (&(*--tmp));
 			}
 
