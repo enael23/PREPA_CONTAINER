@@ -107,7 +107,7 @@ namespace ft
 				return (*this);
 			}
 
-/* + */		reverse_iterator operator+(difference_type n)
+/* + */		reverse_iterator operator+(difference_type n) const
 			{
 				return (reverse_iterator(this->_current - n));
 			}
@@ -131,7 +131,7 @@ namespace ft
 				return (*this);
 			}
 
-/* - */		reverse_iterator operator-(difference_type n)
+/* - */		reverse_iterator operator-(difference_type n) const
 			{
 				return (reverse_iterator(this->_current + n));
 			}

@@ -591,7 +591,7 @@ namespace ft
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0)
 			{
-				if (last <= first)
+				if (last == first)
 					return;
 				size_type n = 0;
 
