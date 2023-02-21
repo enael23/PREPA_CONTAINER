@@ -81,49 +81,75 @@ namespace ft
 			// Default constructor
 			explicit vector(const allocator_type & alloc = allocator_type()) : _allocator(alloc), _size(0), _capacity(0), _array(NULL)
 			{
-//				std::cout << "VECTOR CONSTRUCTED (DEFAULT)" << std::endl;
+				// std::cout << "VECTOR CONSTRUCTED (DEFAULT)" << std::endl;
 			}
 
 			// Fill constructor
 			vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
 				_allocator(alloc), _size(n), _capacity(n), _array(NULL)
 			{
+				if (n > max_size())
+					throw std::length_error("vector::not enough capacity");
 				if (n > 0)
 				{
 					_array = _allocator.allocate(_size);
 					for (size_type i = 0; i < n; i++)
 						_allocator.construct(_array + i, val);
-//					std::cout << "VECTOR CONSTRUCTED (FILL)" << std::endl;
+					// std::cout << "VECTOR CONSTRUCTED (FILL)" << std::endl;
 				}
 				return;
 			}	
 
 			// Range Constructor
-			template <class InputIterator>
-			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0) :
-				_allocator(alloc), _size(0), _capacity(0), _array(NULL)
+// 			template <class InputIterator>
+// 			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0) :
+// 				_allocator(alloc), _size(0), _capacity(0), _array(NULL)
+// 			{
+// 				InputIterator	tmp;
+// 				size_t			range_size;
+// // std::cout << "Dans le range constructor 1\n";
+// 				range_size = 0;
+// 				for (tmp  = first; tmp != last ; tmp++)
+// 					range_size++;
+// // std::cout << "Dans le range constructor         RANGE_SIZE = " << range_size << "\n";
+// 				_size = range_size;
+// 				_capacity = range_size;
+
+// // std::cout << "Dans le range constructor 2\n";
+// 				if (range_size > 0)
+// 				{
+// // std::cout << "Dans le range constructor avant la boucle for\n";
+// 					_array = _allocator.allocate(_capacity);
+// 					pointer ptr = _array;
+// 					for (;first != last; first++)
+// 					{
+// 						_allocator.construct(ptr, *first);
+// 						ptr++;
+// 					}
+// // std::cout << "Dans le range constructor apres la boucle for\n";
+// 					// std::cout << "VECTOR CONSTRUCTED (RANGE)" << std::endl;
+// //					std::cout << "VECTOR CONSTRUCTED (RANGE)\n";
+// 				}
+// // std::cout << "Dans le range constructor 3\n";
+// 				return;
+// 			}
+
+			template< class InputIterator >
+			vector( InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0 ) :
+				_allocator(alloc), _size(0), _capacity(0), _array(0)
 			{
-				InputIterator	tmp;
-				size_t			range_size;
 
-				range_size = 0;
-				for (tmp  = first; tmp != last ; tmp++)
-					range_size++;
-				_size = range_size;
-				_capacity = range_size;
-
-				if (range_size > 0)
+				if (first != last)
+					this->reserve(1);
+				size_type i = 0;
+				for (; first != last; first++)
 				{
-					_array = _allocator.allocate(_capacity);
-					pointer ptr = _array;
-					for (;first != last; first++)
-					{
-						_allocator.construct(ptr, *first);
-						ptr++;
-					}
-//					std::cout << "VECTOR CONSTRUCTED (RANGE)" << std::endl;
+					if (i == this->_capacity)
+						this->reserve(this->_capacity * 2);
+					this->_allocator.construct(this->_array + i++, *first);
+					this->_size++;
 				}
-				return;
+				this->shrink_to_fit();
 			}
 
 			vector( const vector & x ) : _size(0), _capacity(0), _array(NULL)
@@ -152,8 +178,8 @@ namespace ft
 				for (size_t i = 0;  i < _size; i++)
 						this->_allocator.destroy(this->_array + i);
 				if (_capacity > 0)
-					_allocator.deallocate(_array,_size);
-//				std::cout << "VECTOR DESTRUCTED" << std::endl;
+					_allocator.deallocate(_array,_capacity);
+				// std::cout << "VECTOR DESTRUCTED" << std::endl;
 			};
 
 			// Operator=
@@ -337,6 +363,7 @@ namespace ft
 
 			void	assign(size_t n, const value_type &val)
 			{
+// std::cout << "*********** MY ASSIGN N************\n";
 				clear();
 				if (n == 0)
 					return;
@@ -355,6 +382,7 @@ namespace ft
 			template <class InputIterator>
 			void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0)
 			{
+// std::cout << "*********** MY ASSIGN RANGE ***********\n";
 				clear();
 				insert(begin(), first, last);
 			}
@@ -427,29 +455,95 @@ namespace ft
 				return;
 			}
 
+// 			template <class InputIterator>
+// 			void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0)
+// 			{
+// 				if (last == first)
+// 					return;
+// 				size_type n = 0;
+// std::cout << "*****ICI*****\n";
+// 				vector<T, Alloc> v_tmp(first, last);
+				
+// 				for (; first != last; first++)
+// 					n++;
+
+// 				difference_type pos = position - begin();
+// 				if (_capacity < _size + n)
+// 					reserve(capacity_reserve_caclulator(_size + n));
+// 				position = begin() + pos;
+// 				iterator ite_cur = this->end() + (n - 1);
+
+// 				while (ite_cur >= this->end() && ite_cur >= position + n)
+// 				{
+// 					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
+// 					ite_cur--;
+// 				} 
+// 				while (ite_cur >= position + n)
+// 				{
+// 					*ite_cur = *(ite_cur - n);
+// 					ite_cur--;
+// 				}
+// 				iterator new_last = v_tmp.end();
+
+// 				while (ite_cur >= position)
+// 				{
+// 					if (ite_cur < end())
+// 						_allocator.destroy(_array + (ite_cur - begin()));
+// 					new_last--;	
+// 					_allocator.construct(_array + (ite_cur - begin()), *new_last);
+// 					ite_cur--;
+// 				}
+// 				_size+= n;
+// 				return;
+
+// 			}
+
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void **>::type = 0)
 			{
+// std::cout << "********** MY INSERT RANGE ***********\n";
 				if (last == first)
 					return;
 				size_type n = 0;
 
 				vector<T, Alloc> v_tmp(first, last);
-				
-				for (; first != last; first++)
-					n++;
+// std::cout << "YO\n";
+
+// 				for (; first != last; first++)
+// {
+// std::cout << "*************** input it size check n = " << n << "\n";
+// 					n++;
+// }
+
+// 				for (InputIterator tmp = first; tmp != last; tmp++)
+// {
+// // std::cout << "*************** input it size check n = " << n << "\n";
+// 					n++;
+// }
+				n = v_tmp.size();
+
+				if (n == 0)
+					return;
+
 
 				difference_type pos = position - begin();
+// std::cout << "Temp_TOTO_0\n";
 				if (_capacity < _size + n)
+// {
+// std::cout << "size + n = " << _size + n << " j'envoie le reserve\n";
 					reserve(capacity_reserve_caclulator(_size + n));
+// }
+// std::cout << "*********************************************** N = " << n << "\n";
 				position = begin() + pos;
 				iterator ite_cur = this->end() + (n - 1);
 
+// std::cout << "Temp_TOTO_1\n";
 				while (ite_cur >= this->end() && ite_cur >= position + n)
 				{
 					_allocator.construct(_array + (ite_cur - begin()), *(ite_cur - n));
 					ite_cur--;
 				} 
+// std::cout << "Temp_TOTO_2\n";
 				while (ite_cur >= position + n)
 				{
 					*ite_cur = *(ite_cur - n);
@@ -457,6 +551,7 @@ namespace ft
 				}
 				iterator new_last = v_tmp.end();
 
+// std::cout << "Temp_TOTO_3\n";
 				while (ite_cur >= position)
 				{
 					if (ite_cur < end())
@@ -465,6 +560,7 @@ namespace ft
 					_allocator.construct(_array + (ite_cur - begin()), *new_last);
 					ite_cur--;
 				}
+// std::cout << "Temp_TOTO_4\n";
 				_size+= n;
 				return;
 
@@ -548,6 +644,26 @@ namespace ft
 				if (n <= _size * 2)
 					return (_size * 2);
 				return (n);
+			}
+			
+			void shrink_to_fit( void )
+			{
+			if (this->_capacity != this->_size)
+				{
+					pointer tmp = this->_allocator.allocate(this->_size);
+					iterator it = this->begin();
+					for (size_type i = 0; i < this->_size; i++)
+					{
+						this->_allocator.construct(tmp + i, *it);
+						it++;
+					}
+					size_type size = this->_size;
+					this->clear();
+					this->_allocator.deallocate(this->_array, this->_capacity);
+					this->_array = tmp;
+					this->_size = size;
+					this->_capacity = size;
+				}
 			}
 
 	};

@@ -17,11 +17,11 @@
 
 namespace ft
 {
-	struct input_operator_tag {};
-	struct output_iterator_tag {};
-	struct forward_iterator_tag : public input_operator_tag {};
-	struct bidirectionnal_iterator_tag : public forward_iterator_tag {};
-	struct random_access_iterator_tag : public bidirectionnal_iterator_tag {};
+//	struct input_operator_tag {};
+//	struct output_iterator_tag {};
+//	struct forward_iterator_tag : public input_operator_tag {};
+//	struct bidirectionnal_iterator_tag : public forward_iterator_tag {};
+	struct random_access_iterator_tag : public std::bidirectional_iterator_tag {};
 
 	template<class Iter>
 	struct iterator_traits
