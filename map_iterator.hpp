@@ -13,6 +13,8 @@
 #ifndef MAP_ITERATOR_HPP
 # define MAP_ITERATOR_HPP
 
+#include <iostream>
+
 # include "iterator_traits.hpp"
 # include "map_utils.hpp"
 
@@ -27,7 +29,7 @@ namespace ft
 
 		public:
 
-			typedef typename ft::bidirectional_iterator_tag		iterator_category;
+			typedef typename std::bidirectional_iterator_tag		iterator_category;
 			typedef T						value_type;
 			typedef T*						pointer;
 			typedef T&						reference;
@@ -59,21 +61,30 @@ namespace ft
 
 			map_iterator &operator++ (void)
 			{
+std::cout << "TOTO++ void\n";
 				this->_node = this->_node->tree_successor();
 				return *this;
 			}
 
 			map_iterator &operator-- (void)
 			{
-				if (this->_node->is_end)
-					this->_node = this->_node->right;
-				else
-					this->_node = this->_node->tree_predecessor();
+std::cout << "TOTO-- void\n";
+				this->_node = this->_node->tree_predecessor();
 				return *this;
 			}
 
+			// map_iterator &operator-- (void)
+			// {
+			// 	if (this->_node->is_end)
+			// 		this->_node = this->_node->right;
+			// 	else
+			// 		this->_node = this->_node->tree_predecessor();
+			// 	return *this;
+			// }
+
 			map_iterator operator++ (int)
 			{
+std::cout << "TOTO++ int\n";
 				map_iterator tmp = *this;
 				this->_node = this->_node->tree_successor();
 				return tmp;
@@ -81,13 +92,21 @@ namespace ft
 
 			map_iterator operator-- (int)
 			{
+std::cout << "TOTO-- int\n";
 				map_iterator tmp = *this;
-				if (this->_node->is_end)
-					this->_node = this->_node->right;
-				else
-					this->_node = this->_node->tree_predecessor();
+				this->_node = this->_node->tree_predecessor();
 				return tmp;
 			}
+
+			// map_iterator operator-- (int)
+			// {
+			// 	map_iterator tmp = *this;
+			// 	if (this->_node->is_end)
+			// 		this->_node = this->_node->right;
+			// 	else
+			// 		this->_node = this->_node->tree_predecessor();
+			// 	return tmp;
+			// }
 
 			bool operator== (const map_iterator & rhs) const
 			{
@@ -113,12 +132,12 @@ namespace ft
 
 			reference operator* (void) const
 			{
-				return this->_node->root;
+				return this->_node->val;
 			}
 
 			pointer operator-> (void) const
 			{
-				return &this->_node->root;
+				return &this->_node->val;
 			}
 	};
 
@@ -127,7 +146,7 @@ namespace ft
 
 		public:
 
-			typedef typename ft::bidirectional_iterator_tag		iterator_category;
+			typedef typename std::bidirectional_iterator_tag		iterator_category;
 			typedef T						value_type;
 			typedef const T*					pointer;
 			typedef const T&					reference;
@@ -214,12 +233,12 @@ namespace ft
 
 			reference operator* (void) const
 			{
-				return this->_node->root;
+				return this->_node->val;
 			}
 
 			pointer operator-> (void) const
 			{
-				return &this->_node->root;
+				return &this->_node->val;
 			}
 	};
 
