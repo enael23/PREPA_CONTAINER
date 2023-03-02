@@ -23,60 +23,72 @@
 
 
 
-// C++ Program to print binary tree in 2D
+//C++ code for the above approach
 #include <bits/stdc++.h>
+using namespace std;
  
-// using namespace std;
-#define COUNT 10
- 
-// // A binary tree node
-// class Node {
-// public:
-//     int data;
-//     Node *left, *right;
- 
-//     /* Constructor that allocates a new node with the
-//     given data and NULL left and right pointers. */
-//     Node(int data)
-//     {
-//         this->data = data;
-//         this->left = NULL;
-//         this->right = NULL;
-//     }
-// };
- 
-// Function to print binary tree in 2D
-// It does reverse inorder traversal
-void print2DUtil(ft::s_map_node<ft::pair<const int, char> >* root, int space)
+class Treenode 
 {
-// std::cout << "goprint_2\n";
-    // Base case
+public:
+    int data;
+    Treenode *left, *right;
+    Treenode(int data) {
+        this->data = data;
+        left = right = NULL;
+    }
+};
+ 
+class Tree 
+{
+public:
+    Treenode *root;
+    Tree() {
+        root = NULL;
+    }
+};
+ 
+int height(ft::s_map_node<ft::pair<const int, char> >* root) 
+{
     if (root == root->parent)
-        return;
- 
-    // Increase distance between levels
-    space += COUNT;
- 
-    // Process right child first
-    print2DUtil(root->right, space);
- 
-    // Print current node after space
-    // count
-    std::cout << std::endl;
-    for (int i = COUNT; i < space; i++)
-        std::cout << " ";
-    std::cout << root->val.first << "\n";
- 
-    // Process left child
-    print2DUtil(root->left, space);
+        return 0;
+    return max(height(root->left), height(root->right)) + 1;
 }
  
-// Wrapper over print2DUtil()
-void print2D(ft::s_map_node<ft::pair<const int, char> >* root)
+int getcol(int h) 
 {
-    // Pass initial space count as 0
-// std::cout << "goprint_1\n";
-    print2DUtil(root, 0);
+    if (h == 1)
+        return 1;
+    return getcol(h - 1) + getcol(h - 1) + 1;
+}
+ 
+void printTree(int **M, ft::s_map_node<ft::pair<const int, char> >* root, int col, int row, int height) 
+{
+    if (root == root->parent)
+        return;
+    M[row][col] = root->val.first;
+    printTree(M, root->left, col - pow(2, height - 2), row + 1, height - 1);
+    printTree(M, root->right, col + pow(2, height - 2), row + 1, height - 1);
+}
+ 
+void TreePrinter(ft::s_map_node<ft::pair<const int, char> >* root) 
+{
+    int h = height(root);
+    int col = getcol(h);
+    int **M = new int*[h];
+    for (int i = 0; i < h; i++) 
+        M[i] = new int[col];
+    printTree(M, root, col / 2, 0, h);
+    for (int i = 0; i < h; i++) 
+	{
+        for (int j = 0; j < col; j++) 
+		{
+            if (M[i][j] == 0)
+                cout << " " << " ";
+            else
+                cout << M[i][j] << " ";
+        }
+        cout << endl;
+    }
 }
 
 
@@ -102,7 +114,6 @@ int main()
 
 	std::cout << "Is mymap empty? : " << mymap.empty() << std::endl;
 
-
 	std::cout << "MAP ELEMENT 1 : \n";
 	std::cout << "KEY = " << mymap._nil->left->val.first;
 	std::cout << ", VAL = " << mymap._nil->left->val.second << std::endl;
@@ -121,9 +132,20 @@ int main()
 	it--;
 	std::cout << "IT TEST 1 = " << it->first << ", a = " << it->second << std::endl;
 
-	std::cout << "\nTEST AFFICHAGE\n_______________________\n";
+	std::cout << "\n--------------\nTEST AFFICHAGE\n--------------\n";
 
-	print2DUtil(mymap.get_root(), 0);
+	TreePrinter(mymap.get_root());
+
+	std::cout << "\n-----------\nTEST BOUCLE\n-----------\n";
+	// mymap.iterator it2;
+	NS::map<int,char>::iterator it2, end2;
+	it2 = mymap.begin();
+	end2 = mymap.end();
+	for (;it2!=end2;it2++)
+		std::cout << it2->first << " ";
+	std::cout << "\n";
+
+
 
 
 	return (0); 

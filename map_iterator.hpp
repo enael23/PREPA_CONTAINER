@@ -61,14 +61,14 @@ namespace ft
 
 			map_iterator &operator++ (void)
 			{
-std::cout << "TOTO++ void\n";
+// std::cout << "TOTO++ void\n";
 				this->_node = this->_node->tree_successor();
 				return *this;
 			}
 
 			map_iterator &operator-- (void)
 			{
-std::cout << "TOTO-- void\n";
+// std::cout << "TOTO-- void\n";
 				this->_node = this->_node->tree_predecessor();
 				return *this;
 			}
@@ -84,7 +84,7 @@ std::cout << "TOTO-- void\n";
 
 			map_iterator operator++ (int)
 			{
-std::cout << "TOTO++ int\n";
+// std::cout << "TOTO++ int\n";
 				map_iterator tmp = *this;
 				this->_node = this->_node->tree_successor();
 				return tmp;
@@ -92,7 +92,7 @@ std::cout << "TOTO++ int\n";
 
 			map_iterator operator-- (int)
 			{
-std::cout << "TOTO-- int\n";
+// std::cout << "TOTO-- int\n";
 				map_iterator tmp = *this;
 				this->_node = this->_node->tree_predecessor();
 				return tmp;

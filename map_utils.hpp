@@ -30,16 +30,18 @@ namespace ft
         value_type      val;
         // map_node_color  color;
         bool            is_black;
-        bool            is_nil;
+        // bool            is_nil;
 
-        s_map_node( const value_type & n_val ) : parent(NULL), left(NULL), right(NULL), val(n_val), is_black(true), is_nil(false) {}
+        s_map_node( const value_type & n_val ) : parent(NULL), left(NULL), right(NULL), val(n_val), is_black(true) {}
 
 
         s_map_node* tree_min()
         {
-std::cout << "BOB min\n";
+// std::cout << "BOB min\n";
             s_map_node* x = this;
-            while (x->left && !x->left->is_nil)
+            // while (x->left && !x->left->is_nil)
+            while (x->left != x->left->parent)
+
                 x = x->left;
             return x;
         }
@@ -47,19 +49,22 @@ std::cout << "BOB min\n";
         s_map_node* tree_max()
         {
             s_map_node* x = this;
-            while (x->right && !x->right->is_nil)
+            // while (x->right && !x->right->is_nil)
+            while (x->right != x->right->parent)
                 x = x->right;
             return x;
         }
 
         s_map_node* tree_successor()
         {
-std::cout << "BOB successor\n";
+// std::cout << "BOB successor\n";
             s_map_node* x = this;
-            if (x->right && !x->right->is_nil)
+            // if (x->right && !x->right->is_nil)
+            if (x->right != x->right->parent)
                 return (x->right->tree_min());
             s_map_node* y = this->parent;
-            while (y && !y->is_nil && (x == y->right))
+            // while (y && !y->is_nil && (x == y->right))
+            while (y != y->parent && (x == y->right))
             {
                 x = y;
                 y = y->parent;
@@ -70,10 +75,12 @@ std::cout << "BOB successor\n";
         s_map_node* tree_predecessor()
         {
             s_map_node* x = this;
-            if (x->left && !x->left->is_nil)
+            // if (x->left && !x->left->is_nil)
+            if (x->left != x->left->parent)
                 return (x->left->tree_max());
             s_map_node* y = this->parent;
-            while (y && !y->is_nil && (x == y->left))
+            // while (y && !y->is_nil && (x == y->left))
+            while (y != y->parent && (x == y->left))
             {
                 x = y;
                 y = y->parent;
