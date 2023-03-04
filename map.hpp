@@ -165,7 +165,7 @@ namespace ft
                     { return (v_comp(x.first, y.first)); }
 			};
 
-		public :
+		protected :
 
 			node*		        _nil;
 			size_type           _size;
@@ -279,11 +279,6 @@ namespace ft
 			at				x
 			*/
 
-            node* get_root()
-            { return (_nil->left); }
-
-
-
 			/*
 			Capacity:
 			~~~~~~~~~
@@ -317,12 +312,136 @@ namespace ft
             /*
             Lookup:
             ~~~~~~~
-            count           x
-            find            x
-            equal_range     x
+            find            v
+            count           v
             lower_bound     x
             upper_bound     x
+            equal_range     x
             */
+
+            iterator find (const key_type& k)
+            {
+                node* tmp = _nil->left;
+
+                while(tmp != _nil && !_is_equal(k, tmp->val.first))
+                {
+                	if (key_compare()(k, tmp->val.first))
+						tmp = tmp->left;
+					else
+						tmp = tmp->right;    
+                }
+                if (tmp == _nil)
+                    return(_nil);
+                return(iterator(tmp));
+            }
+            
+            const_iterator find (const key_type& k) const
+            {
+                node* tmp = _nil->left;
+
+                while(tmp != _nil && !_is_equal(k, tmp->val.first))
+                {
+                	if (key_compare()(k, tmp->val.first))
+						tmp = tmp->left;
+					else
+						tmp = tmp->right;    
+                }
+                if (tmp == _nil)
+                    return(_nil);
+                return(const_iterator(tmp));
+            }
+
+            size_type count(const key_type & k) const
+            {
+				if (find(k) != _nil)
+					return 1;
+				return 0;
+			}
+
+            iterator lower_bound (const key_type& k)
+            {
+                node* tmp = _nil->left;
+                node* result = _nil->left;
+
+                while (tmp != _nil)
+                {
+                    if(!key_compare()(tmp->val.first, k))
+                    {
+                        result = tmp;
+                        tmp = tmp->left;
+                    }
+                    else
+                        tmp = tmp->right;
+                }
+                return (iterator(result));
+            }
+
+            const_iterator lower_bound (const key_type& k) const
+            {
+                node* tmp = _nil->left;
+                node* result = _nil->left;
+
+                while (tmp != _nil)
+                {
+                    if(!key_compare()(tmp->val.first, k))
+                    {
+                        result = tmp;
+                        tmp = tmp->left;
+                    }
+                    else
+                        tmp = tmp->right;
+                }
+                return (const_iterator(result));
+            }
+
+            iterator upper_bound (const key_type& k)
+            {
+                if (!key_compare()(k, _nil->left->tree_max()->val.first))
+                    return(iterator(_nil));
+
+                node* tmp = _nil->left;
+                node* result = _nil->left;
+
+                while (tmp != _nil)
+                {
+                    if(key_compare()(k, tmp->val.first))
+                    {
+                        result = tmp;
+                        tmp = tmp->left;
+                    }
+                    else
+                        tmp = tmp->right;
+                }
+                return (iterator(result));
+            }
+
+            const_iterator upper_bound (const key_type& k) const
+            {
+                if (!key_compare()(k, _nil->left->tree_max()->val.first))
+                    return(const_iterator(_nil));
+
+                node* tmp = _nil->left;
+                node* result = _nil->left;
+
+                while (tmp != _nil)
+                {
+                    if(key_compare()(k, tmp->val.first))
+                    {
+                        result = tmp;
+                        tmp = tmp->left;
+                    }
+                    else
+                        tmp = tmp->right;
+                }
+                return (const_iterator(result));
+            }
+
+			ft::pair<const_iterator, const_iterator> equal_range(const key_type& k) const
+            { return (ft::make_pair(lower_bound(k), upper_bound(k))); }
+
+			ft::pair<iterator, iterator> equal_range(const key_type& k)
+            { return (ft::make_pair(lower_bound(k), upper_bound(k))); }
+
 
             /*
             Observers:
@@ -330,6 +449,25 @@ namespace ft
             key_comp        x
             value_comp      x
             */
+
+            key_compare key_comp() const
+            { return (_key_comp); }
+
+			value_compare value_comp() const
+            { return this->_value_comp; }
+
+            /*
+            Utils private member functions:
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            */
+
+node* get_root()
+{ return (_nil->left); }
+
+        private :
+
+			bool _is_equal(const key_type & val1, const key_type & val2) const
+            { return (!key_compare()(val1, val2) && !key_compare()(val2, val1)); }
 
         
 
