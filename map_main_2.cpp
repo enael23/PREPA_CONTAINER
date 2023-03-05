@@ -132,9 +132,32 @@ int main()
 	it--;
 	std::cout << "IT TEST 1 = " << it->first << ", a = " << it->second << std::endl;
 
-	// std::cout << "\n--------------\nTEST AFFICHAGE\n--------------\n";
+	//  std::cout << "\n--------------\nTEST AFFICHAGE\n--------------\n";
 
-	// TreePrinter(mymap.get_root());
+	//  TreePrinter(mymap.get_root());
+
+
+	it++;
+	std::cout << "IT TEST 4 = " << it->first << ", b = " << it->second << std::endl;
+	// std::cout << "Est ce que it(4)->right == end()? : " << (mymap._nil->left->left->right->right == mymap._nil) << "\n";
+
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+
 
 	std::cout << "\n-----------\nTEST BOUCLE\n-----------\n";
 	// mymap.iterator it2;

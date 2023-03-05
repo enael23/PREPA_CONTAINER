@@ -165,7 +165,7 @@ namespace ft
                     { return (v_comp(x.first, y.first)); }
 			};
 
-		protected :
+		public :
 
 			node*		        _nil;
 			size_type           _size;
@@ -216,39 +216,7 @@ namespace ft
         }
 */
 
-            void insert (const value_type& val)
-            {
-                node* z = _alloc.allocate(1);
 
-                node tmp(val);
-                // tmp.is_nil = false;
-                tmp.parent = _nil;
-                tmp.left = _nil;
-                tmp.right = _nil;
-                tmp.is_black = false;
-
-                _alloc.construct(z, tmp);
-
-                node* y = _nil;
-                node* x = _nil->left;
-                while (x != _nil)
-                {
-                    y = x;
-                    if (_value_comp(z->val, y->val))
-                        x = x->left;
-                    else 
-                        x = x->right;
-                }
-                z->parent = y;
-                if (y == _nil)
-                    _nil->left = z;
-                else if (_value_comp(z->val, y->val))
-                    y->left = z;
-                else
-                    y->right = z;
-
-                _size++;
-            }
 
 			/*
 			Iterators:
@@ -271,7 +239,7 @@ namespace ft
 			const_reverse_iterator  rbegin() const  { return const_reverse_iterator(this->_nil()); }
 			reverse_iterator        rend()          { return reverse_iterator(this->begin()); }
 			const_reverse_iterator  rend() const    { return const_reverse_iterator(this->begin()); }
-            //celui qui efface ca est un gros nul
+
 			/*
 			Element access:
 			~~~~~~~~~~~~~~~
@@ -323,10 +291,32 @@ namespace ft
 			Modifiers:
 			~~~~~~~~~~
 			clear			x
-			insert			x
+			insert			single  v   hint    v   range   v
 			erase			x	
 			swap			x            
 			*/
+
+            ft::pair<iterator, bool> insert(const value_type& val)
+            {
+// std::cout << "INSERT\n";
+                iterator it = find(val.first);
+                if (it == end())
+                    return (ft::pair<iterator, bool>(iterator(new_insert(val)), true));
+                return (ft::pair<iterator, bool>(it, false));    
+			}
+
+			iterator insert(iterator position, const value_type& val)
+            {
+				(void)position;
+				return (insert(val).first);
+			}
+
+			template <class InputIterator>
+			void insert( InputIterator first, InputIterator last )
+            {
+				for (; first != last; first++)
+					insert(*first);
+			}
 
             /*
             Lookup:
@@ -350,7 +340,11 @@ namespace ft
 						tmp = tmp->right;    
                 }
                 if (tmp == _nil)
-                    return(_nil);
+// {
+// std::cout << "NOT FOUND\n";
+                    return(end());
+// }
+// std::cout << "FOUND\n";
                 return(iterator(tmp));
             }
             
@@ -494,7 +488,39 @@ node* get_root()
             ~~~~~~~~~~~~~~~~~~~~~~~~~
             */
             
+            // void insert (const value_type& val)
+            // {
+            //     node* z = _alloc.allocate(1);
 
+            //     node tmp(val);
+            //     // tmp.is_nil = false;
+            //     tmp.parent = _nil;
+            //     tmp.left = _nil;
+            //     tmp.right = _nil;
+            //     tmp.is_black = false;
+
+            //     _alloc.construct(z, tmp);
+
+            //     node* y = _nil;
+            //     node* x = _nil->left;
+            //     while (x != _nil)
+            //     {
+            //         y = x;
+            //         if (_value_comp(z->val, y->val))
+            //             x = x->left;
+            //         else 
+            //             x = x->right;
+            //     }
+            //     z->parent = y;
+            //     if (y == _nil)
+            //         _nil->left = z;
+            //     else if (_value_comp(z->val, y->val))
+            //         y->left = z;
+            //     else
+            //         y->right = z;
+
+            //     _size++;
+            // }
 
             void left_rotate(node* x)
             {
@@ -506,7 +532,7 @@ if (y == _nil)
 }
                 x->right = y->left;                 // turn y's left subtree into x's right subtree
                 if (y->left != _nil)
-                    y->left = x;
+                    y->left->parent = x;
                 y->parent = x->parent;              // links x's parent to y
                 if (x->parent == _nil)
                     _nil->left = y;
@@ -528,7 +554,7 @@ if (y == _nil)
 }
                 x->left = y->right;                 // turn y's left subtree into x's right subtree
                 if (y->right != _nil)
-                    y->right = x;
+                    y->right->parent = x;
                 y->parent = x->parent;              // links x's parent to y
                 if (x->parent == _nil)
                     _nil->left = y;
@@ -540,7 +566,7 @@ if (y == _nil)
                 x->parent = y;
             }
 
-            void new_insert(const value_type& val)
+            node* new_insert(const value_type& val)
             {
                 node* z = _alloc.allocate(1);
 
@@ -554,6 +580,7 @@ if (y == _nil)
                 _alloc.construct(z, tmp);
                 RB_insert(z);
                 _size++;
+                return (z);
             }
 
             void RB_insert(node* z)
@@ -591,21 +618,21 @@ if (y == _nil)
                         y = z->parent->parent->right;
                         if (y->is_black == false)
                         {
-                            z->parent->is_black = true;
-                            y->is_black = true;
-                            z->parent->parent->is_black = false;
-                            z = z->parent->parent;
+                            z->parent->is_black = true;             //case 1 z's UNCLE is RED
+                            y->is_black = true;                     //case 1 z's UNCLE is RED
+                            z->parent->parent->is_black = false;    //case 1 z's UNCLE is RED
+                            z = z->parent->parent;                  //case 1 z's UNCLE is RED
                         }
                         else 
                         {
                             if (z == z->parent->right)
                             {
-                                z = z->parent;
-                                left_rotate(z);
+                                z = z->parent;                      //case 2 z's UNCLE is BLACK, z is right           
+                                left_rotate(z);                     //case 2 z's UNCLE is BLACK, z is right 
                             }
-                            z->parent->is_black = true;
-                            z->parent->parent->is_black = false;
-                            right_rotate(z->parent->parent);
+                            z->parent->is_black = true;             //case 3 z's UNCLE is BLACK, z is left 
+                            z->parent->parent->is_black = false;    //case 3 z's UNCLE is BLACK, z is left 
+                            right_rotate(z->parent->parent);        //case 3 z's UNCLE is BLACK, z is left 
                         }
                     }
                     else

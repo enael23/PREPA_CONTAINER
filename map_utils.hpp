@@ -64,10 +64,12 @@ namespace ft
                 return (x->right->tree_min());
             s_map_node* y = this->parent;
             // while (y && !y->is_nil && (x == y->right))
+// std::cout << "x = " << x->val.first << ", y = " << y->val.first << "\n";
             while (y != y->parent && (x == y->right))
             {
                 x = y;
                 y = y->parent;
+// std::cout << "x = " << x->val.first << ", y = " << y->val.first << "\n";
             }
             return y;   
         }

@@ -142,6 +142,20 @@ int main()
 	mymap.new_insert(NS::pair<int, char>(14,'b'));
 	std::cout << "\n\nInsert 14 :\n";
 	TreePrinter(mymap.get_root());
+	mymap.new_insert(NS::pair<int, char>(14,'b'));
+	std::cout << "\n\nInsert 14 :\n";
+	TreePrinter(mymap.get_root());
+
+	NS::map<int,char> mymap2;
+	std::cout << "\n~~~~~~~~~~~~~~~~~\nSORTED INSERTIONS\n~~~~~~~~~~~~~~~~~~~~\n";
+	for (int i = 1; i < 30; i++)
+	{
+		std::cout << "\n\nInsert : " << i << "\n";
+		mymap2.new_insert(NS::pair<int, char>(i,'b'));
+		TreePrinter(mymap2.get_root());
+	}
+
+
 
 	return (0); 
 }
