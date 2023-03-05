@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_main.cpp                                       :+:      :+:    :+:   */
+/*   map_main_test_colors.cpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpauline <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 19:47:19 by jpauline          #+#    #+#             */
-/*   Updated: 2023/03/01 21:10:09 by jpauline         ###   ########.fr       */
+/*   Updated: 2023/03/05 20:29:13 by jpauline         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 # define NS ft
 #endif
 
+
+#define RESET   "\033[0m"
+#define RED     "\033[91m"      /* Red */
 
 
 //C++ code for the above approach
@@ -61,11 +64,12 @@ int getcol(int h)
     return getcol(h - 1) + getcol(h - 1) + 1;
 }
  
-void printTree(int **M, ft::s_map_node<ft::pair<const int, char> >* root, int col, int row, int height) 
+void printTree(ft::pair<int, bool> **M, ft::s_map_node<ft::pair<const int, char> >* root, int col, int row, int height) 
 {
     if (root == root->parent)
         return;
-    M[row][col] = root->val.first;
+    M[row][col].first = root->val.first;
+    M[row][col].second = root->is_black;
     printTree(M, root->left, col - pow(2, height - 2), row + 1, height - 1);
     printTree(M, root->right, col + pow(2, height - 2), row + 1, height - 1);
 }
@@ -74,18 +78,21 @@ void TreePrinter(ft::s_map_node<ft::pair<const int, char> >* root)
 {
     int h = height(root);
     int col = getcol(h);
-    int **M = new int*[h];
+    ft::pair<int,bool> **M = new ft::pair<int, bool>*[h];
     for (int i = 0; i < h; i++) 
-        M[i] = new int[col];
+        M[i] = new ft::pair<int, bool>[col];
     printTree(M, root, col / 2, 0, h);
     for (int i = 0; i < h; i++) 
 	{
         for (int j = 0; j < col; j++) 
 		{
-            if (M[i][j] == 0)
+            if (M[i][j].first == 0)
                 cout << " " << " ";
-            else
-                cout << M[i][j] << " ";
+            else if (M[i][j].second == true)
+                cout << M[i][j].first << " ";
+			else
+                cout << RED << M[i][j].first << RESET << " ";
+                //cout << "\033[91m" << M[i][j].first << "\033[0m" << " ";
         }
         cout << endl;
     }
@@ -132,9 +139,9 @@ int main()
 	it--;
 	std::cout << "IT TEST 1 = " << it->first << ", a = " << it->second << std::endl;
 
-	// std::cout << "\n--------------\nTEST AFFICHAGE\n--------------\n";
+	std::cout << "\n--------------\nTEST AFFICHAGE\n--------------\n";
 
-	// TreePrinter(mymap.get_root());
+	TreePrinter(mymap.get_root());
 
 	std::cout << "\n-----------\nTEST BOUCLE\n-----------\n";
 	// mymap.iterator it2;

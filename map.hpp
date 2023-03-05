@@ -253,10 +253,10 @@ namespace ft
 			/*
 			Iterators:
 			~~~~~~~~~~
-			begin			x
-			end				x
-			rbegin			x
-			rend			x
+			begin			v   const   v
+			end				v   const   v
+			rbegin			v   const   v
+			rend			v   const   v
 			cbegin			x (c++11)
 			cendy			x (c++11)
 			crbegin			x (c++11)
@@ -271,20 +271,39 @@ namespace ft
 			const_reverse_iterator  rbegin() const  { return const_reverse_iterator(this->_nil()); }
 			reverse_iterator        rend()          { return reverse_iterator(this->begin()); }
 			const_reverse_iterator  rend() const    { return const_reverse_iterator(this->begin()); }
-
+            //celui qui efface ca est un gros nul
 			/*
 			Element access:
 			~~~~~~~~~~~~~~~
 			operator[]		x
-			at				x
+			at				v   const   v
 			*/
+
+			mapped_type& at(const key_type& k )
+            {
+				iterator it = find(k);
+				if (it != _nil)
+					return it->second;
+				else
+					throw std::out_of_range("map::at : out of range exception");
+			}
+
+			const mapped_type& at(const key_type& k) const
+            {
+				const_iterator it = find(k);
+				if (it != _nil)
+					return it->second;
+				else
+					throw std::out_of_range("map::at : out of range exception");
+			}
+
 
 			/*
 			Capacity:
 			~~~~~~~~~
-			empty			x
-            size			x
-			max_size		x
+			empty			v
+            size			v
+			max_size		v
 			*/
 			
             bool empty() const
@@ -314,9 +333,9 @@ namespace ft
             ~~~~~~~
             find            v
             count           v
-            lower_bound     x
-            upper_bound     x
-            equal_range     x
+            lower_bound     v
+            upper_bound     v
+            equal_range     v
             */
 
             iterator find (const key_type& k)
@@ -446,8 +465,8 @@ namespace ft
             /*
             Observers:
             ~~~~~~~~~~
-            key_comp        x
-            value_comp      x
+            key_comp        v
+            value_comp      v
             */
 
             key_compare key_comp() const
@@ -464,13 +483,156 @@ namespace ft
 node* get_root()
 { return (_nil->left); }
 
-        private :
+        // private :
+        public :
 
 			bool _is_equal(const key_type & val1, const key_type & val2) const
             { return (!key_compare()(val1, val2) && !key_compare()(val2, val1)); }
 
-        
+            /*
+            RED-BLACK Tree functions:
+            ~~~~~~~~~~~~~~~~~~~~~~~~~
+            */
+            
 
+
+            void left_rotate(node* x)
+            {
+                node* y = x->right;                  // set y
+if (y == _nil)
+{
+    std::cout << "\033[91m" << "IMPOSSIBLE LEFT ROTATE" << "\033[0m" << "\n";
+    return;
+}
+                x->right = y->left;                 // turn y's left subtree into x's right subtree
+                if (y->left != _nil)
+                    y->left = x;
+                y->parent = x->parent;              // links x's parent to y
+                if (x->parent == _nil)
+                    _nil->left = y;
+                else if (x == x->parent->left)
+                    x->parent->left = y;
+                else 
+                    x->parent->right = y;
+                y->left = x;                        // put x on y's left
+                x->parent = y;
+            }
+
+            void right_rotate(node* x)
+            {
+                node* y = x->left;                  // set y
+if (y == _nil)
+{
+    std::cout << "\033[91m" << "IMPOSSIBLE RIGHT ROTATE" << "\033[0m" << "\n";
+    return;
+}
+                x->left = y->right;                 // turn y's left subtree into x's right subtree
+                if (y->right != _nil)
+                    y->right = x;
+                y->parent = x->parent;              // links x's parent to y
+                if (x->parent == _nil)
+                    _nil->left = y;
+                else if (x == x->parent->right)
+                    x->parent->right = y;
+                else 
+                    x->parent->left = y;
+                y->right = x;                        // put x on y's right
+                x->parent = y;
+            }
+
+            void new_insert(const value_type& val)
+            {
+                node* z = _alloc.allocate(1);
+
+                node tmp(val);
+                // tmp.is_nil = false;
+                tmp.parent = _nil;
+                tmp.left = _nil;
+                tmp.right = _nil;
+                tmp.is_black = false;
+
+                _alloc.construct(z, tmp);
+                RB_insert(z);
+                _size++;
+            }
+
+            void RB_insert(node* z)
+            {
+                node* y = _nil;
+                node* x = _nil->left;
+                while (x != _nil)
+                {
+                    y = x;
+                    if (_value_comp(z->val, y->val))
+                        x = x->left;
+                    else 
+                        x = x->right;
+                }
+                z->parent = y;
+                if (y == _nil)
+                    _nil->left = z;
+                else if (_value_comp(z->val, y->val))
+                    y->left = z;
+                else
+                    y->right = z;
+                // z->left = _nil;
+                // z->right = _nil;
+                // z->is_black = false;
+                RB_insert_fixup(z);
+            }
+
+            void RB_insert_fixup(node* z)
+            {
+                node* y;
+                while (z->parent->is_black == false)
+                {
+                    if (z->parent == z->parent->parent->left)
+                    {
+                        y = z->parent->parent->right;
+                        if (y->is_black == false)
+                        {
+                            z->parent->is_black = true;
+                            y->is_black = true;
+                            z->parent->parent->is_black = false;
+                            z = z->parent->parent;
+                        }
+                        else 
+                        {
+                            if (z == z->parent->right)
+                            {
+                                z = z->parent;
+                                left_rotate(z);
+                            }
+                            z->parent->is_black = true;
+                            z->parent->parent->is_black = false;
+                            right_rotate(z->parent->parent);
+                        }
+                    }
+                    else
+                    {
+                        y = z->parent->parent->left;
+                        if (y->is_black == false)
+                        {
+                            z->parent->is_black = true;
+                            y->is_black = true;
+                            z->parent->parent->is_black = false;
+                            z = z->parent->parent;
+                        }
+                        else 
+                        {
+                            if (z == z->parent->left)
+                            {
+                                z = z->parent;
+                                right_rotate(z);
+                            }
+                            z->parent->is_black = true;
+                            z->parent->parent->is_black = false;
+                            left_rotate(z->parent->parent);
+                        }
+                    }
+                }
+                _nil->left->is_black = true;
+            }
     };
 
     /*
