@@ -176,15 +176,15 @@ namespace ft
 			/*
 			MEMBER FUNCTIONS
 			~~~~~~~~~~~~~~~~
-			(constructor)				x
-			(destructor)				x
-			operator= (assign content)	x
-            get_allocator               x
+			(constructor)				empty   v   range   NOK     copy    v
+			(destructor)				v
+			operator= (assign content)	v
+            get_allocator               v
 			*/
 
 		public :
 
-            explicit map ( const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : 
+            explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : 
                 _size(0), _alloc(alloc), _key_comp(comp), _value_comp(value_compare(comp))
             {
 				_nil = _alloc.allocate(1);
@@ -194,6 +194,33 @@ namespace ft
                 _nil->right = _nil;
                 _nil->is_black = true;
 			}
+
+			map (const map &x) : 
+                _size(0), _alloc(x.get_allocator()), _key_comp(x.key_comp()), _value_comp(x.value_comp())
+            {
+				_nil = _alloc.allocate(1);
+                // _nil->is_nil = true;
+                _nil->parent = _nil;
+                _nil->left = _nil;
+                _nil->right = _nil;
+                _nil->is_black = true;
+				insert(x.begin(), x.end());
+			}
+
+			map& operator= (const map& x)
+            {
+				clear();
+				insert(x.begin(), x.end());
+				return *this;
+			}
+
+            ~map()
+            {
+// std::cout << "DESTROYER";
+                clear();
+                _alloc.destroy(_nil);
+                _alloc.deallocate(_nil, 1);
+            }
 
             allocator_type get_allocator() const 
             { return this->_alloc; }
@@ -235,17 +262,20 @@ namespace ft
 			const_iterator          begin() const   { return const_iterator(this->_nil->right->tree_min()); }
 			iterator                end()           { return iterator(this->_nil); }
 			const_iterator          end() const     { return const_iterator(this->_nil); }
-			reverse_iterator        rbegin()        { return reverse_iterator(this->_nil()); }
-			const_reverse_iterator  rbegin() const  { return const_reverse_iterator(this->_nil()); }
+			reverse_iterator        rbegin()        { return reverse_iterator(this->_nil); }
+			const_reverse_iterator  rbegin() const  { return const_reverse_iterator(this->_nil); }
 			reverse_iterator        rend()          { return reverse_iterator(this->begin()); }
 			const_reverse_iterator  rend() const    { return const_reverse_iterator(this->begin()); }
 
 			/*
 			Element access:
 			~~~~~~~~~~~~~~~
-			operator[]		x
+			operator[]		v
 			at				v   const   v
 			*/
+
+            mapped_type& operator[](const key_type& k)
+            { return (this->insert(ft::make_pair(k, mapped_type()))).first->second; }
 
 			mapped_type& at(const key_type& k )
             {
@@ -290,15 +320,22 @@ namespace ft
             /*
 			Modifiers:
 			~~~~~~~~~~
-			clear			x
+			clear			v
 			insert			single  v   hint    v   range   v
-			erase			x	
-			swap			x            
+			erase			ite     v   key     v   range   v   	
+			swap			NOK            
 			*/
+
+            void clear()
+            {
+// std::cout << "CLEAR";
+                clear_node(_nil->left);
+                _nil->left = _nil;
+                _size = 0;
+            }
 
             ft::pair<iterator, bool> insert(const value_type& val)
             {
-// std::cout << "INSERT\n";
                 iterator it = find(val.first);
                 if (it == end())
                     return (ft::pair<iterator, bool>(iterator(new_insert(val)), true));
@@ -318,18 +355,51 @@ namespace ft
 					insert(*first);
 			}
 
+
+            void erase (iterator position)
+            {
+// std::cout << "ERASE IT\n";
+                if (position != end())
+                {
+                    node* node = position.base();
+                    RB_delete(node);
+                    _size--;
+                    _alloc.destroy(node);
+                    _alloc.deallocate(node, 1);
+                }
+            }
+
+            size_type erase (const key_type& k)
+            {
+// std::cout << "ERASE KEY " << k << "\n";
+                iterator it = find(k);
+                if (it == end())
+                    return(0);
+                erase(it);
+                return(1);
+            }
+
+            void erase (iterator first, iterator last)
+            {
+// std::cout << "ERASE RANGE\n";
+                for (; first != last; )
+					erase(first++);
+				return last;
+            }
+
             /*
             Lookup:
             ~~~~~~~
-            find            v
+            find            v   const   v
             count           v
-            lower_bound     v
-            upper_bound     v
+            lower_bound     v   const   v
+            upper_bound     v   const   v
             equal_range     v
             */
 
             iterator find (const key_type& k)
             {
+// std::cout << "FIND" << k << "\n";                
                 node* tmp = _nil->left;
 
                 while(tmp != _nil && !_is_equal(k, tmp->val.first))
@@ -341,10 +411,10 @@ namespace ft
                 }
                 if (tmp == _nil)
 // {
-// std::cout << "NOT FOUND\n";
+// std::cout << "NOT FOUND " << k << "\n";
                     return(end());
 // }
-// std::cout << "FOUND\n";
+// std::cout << "FOUND " << k << "\n";
                 return(iterator(tmp));
             }
             
@@ -474,11 +544,13 @@ namespace ft
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             */
 
-node* get_root()
-{ return (_nil->left); }
+
 
         // private :
-        public :
+        public :    // For tests with tree display
+
+node* get_root()
+{ return (_nil->left); }
 
 			bool _is_equal(const key_type & val1, const key_type & val2) const
             { return (!key_compare()(val1, val2) && !key_compare()(val2, val1)); }
@@ -525,11 +597,11 @@ node* get_root()
             void left_rotate(node* x)
             {
                 node* y = x->right;                  // set y
-if (y == _nil)
-{
-    std::cout << "\033[91m" << "IMPOSSIBLE LEFT ROTATE" << "\033[0m" << "\n";
-    return;
-}
+                // if (y == _nil)
+                // {
+                //     std::cout << "\033[91m" << "IMPOSSIBLE LEFT ROTATE" << "\033[0m" << "\n";
+                //     return;
+                // }
                 x->right = y->left;                 // turn y's left subtree into x's right subtree
                 if (y->left != _nil)
                     y->left->parent = x;
@@ -547,11 +619,11 @@ if (y == _nil)
             void right_rotate(node* x)
             {
                 node* y = x->left;                  // set y
-if (y == _nil)
-{
-    std::cout << "\033[91m" << "IMPOSSIBLE RIGHT ROTATE" << "\033[0m" << "\n";
-    return;
-}
+                // if (y == _nil)
+                // {
+                //     std::cout << "\033[91m" << "IMPOSSIBLE RIGHT ROTATE" << "\033[0m" << "\n";
+                //     return;
+                // }
                 x->left = y->right;                 // turn y's left subtree into x's right subtree
                 if (y->right != _nil)
                     y->right->parent = x;
@@ -635,7 +707,7 @@ if (y == _nil)
                             right_rotate(z->parent->parent);        //case 3 z's UNCLE is BLACK, z is left 
                         }
                     }
-                    else
+                    else                                            //SYMMETRICAL
                     {
                         y = z->parent->parent->left;
                         if (y->is_black == false)
@@ -660,18 +732,156 @@ if (y == _nil)
                 }
                 _nil->left->is_black = true;
             }
+
+            void RB_transplant(node* u, node*v)
+            {
+                if (u->parent == _nil)
+                    _nil->left = v;
+                else if (u == u->parent->left)
+                    u->parent->left = v;
+                else
+                    u->parent->right = v;
+                v->parent = u->parent; 
+            }
+
+            void RB_delete(node* z)
+            {
+// std::cout << "RB_DELETE " << z->val.first << "\n";
+                node* x;
+                node* y = z;
+                bool y_original_is_black = y->is_black;
+                if (z->left == _nil)
+                {
+                    x = z->right;
+                    RB_transplant(z, z->right);
+                }
+                else if (z->right == _nil)
+                {
+                    x = z->left;
+                    RB_transplant(z, z->left);
+                }
+                else
+                {
+                    y = z->right->tree_min();
+                    y_original_is_black = y->is_black;
+                    x = y->right;
+                    if (y->parent == z)
+                        x->parent = y;
+                    else
+                    {
+                        RB_transplant(y, y->right);
+                        y->right = z->right;
+                        y->right->parent = y;
+                    }
+                    RB_transplant(z, y);
+                    y->left = z->left;
+                    y->left->parent = y;
+                    y->is_black = z->is_black;
+                }
+                if (y_original_is_black == true)
+                    RB_delete_fixup(x);
+                _nil->parent = _nil;                // _nil might be altered in the process if x = _nil
+                // _nil->is_black = true;
+                // _nil->right = _nil;
+            }
+
+            void RB_delete_fixup(node* x)
+            {
+                node* w;
+// std::cout << "RB_DELETE_FIXUP\n";
+                while (x != _nil->left && x->is_black == true)
+                {
+                    if (x == x->parent->left)
+                    {
+                        w = x->parent->right;
+                        if (w->is_black == false)
+                        {
+                            w->is_black = true;                     // CASE 1
+                            x->parent->is_black = false;            // CASE 1
+                            left_rotate(x->parent);                 // CASE 1
+                            w = x->parent->right;                   // CASE 1
+                        }
+                        if (w->left->is_black == true && w->right->is_black == true)
+                        {
+                            w->is_black = false;                    // CASE 2
+                            x = x->parent;                          // CASE 2
+                        }
+                        else
+                        {
+                            if (w->right->is_black == true)
+                            {
+                                w->left->is_black = true;           // CASE 3
+                                w->is_black = false;                // CASE 3
+                                right_rotate(w);                    // CASE 3
+                                w = x->parent->right;               // CASE 3
+                            }
+                            w->is_black = x->parent->is_black;      // CASE 4
+                            x->parent->is_black = true;             // CASE 4
+                            w->right->is_black = true;              // CASE 4
+                            left_rotate(x->parent);                 // CASE 4
+                            x = _nil->left; // root                 // CASE 4
+                        }
+                    }
+                    else
+                    {
+                        w = x->parent->left;
+                        if (w->is_black == false)
+                        {
+                            w->is_black = true;                     // CASE 1
+                            x->parent->is_black = false;            // CASE 1
+                            right_rotate(x->parent);                // CASE 1
+                            w = x->parent->left;                    // CASE 1
+                        }
+                        if (w->right->is_black == true && w->left->is_black == true)
+                        {
+                            w->is_black = false;                    // CASE 2
+                            x = x->parent;                          // CASE 2
+                        }
+                        else
+                        {
+                            if (w->left->is_black == true)
+                            {
+                                w->right->is_black = true;          // CASE 3
+                                w->is_black = false;                // CASE 3
+                                left_rotate(w);                     // CASE 3
+                                w = x->parent->left;                // CASE 3
+                            }
+                            w->is_black = x->parent->is_black;      // CASE 4
+                            x->parent->is_black = true;             // CASE 4
+                            w->left->is_black = true;               // CASE 4
+                            right_rotate(x->parent);                // CASE 4
+                            x = _nil->left; // root                 // CASE 4
+                        }
+                    }
+                }
+                x->is_black = true;
+            }
+
+            void clear_node(node* n)
+            {
+                if (n != _nil)
+                {
+// std::cout << "clear node key = " << n->val.first;
+                    clear_node(n->left);
+                    clear_node(n->right);
+                    _alloc.destroy(n);
+                    _alloc.deallocate(n, 1);
+                }
+            }
+
     };
+
 
     /*
     Non-member functions:
     ~~~~~~~~~~~~~~~~~~~~~
-    operator==
-    operator!=
-    operator<
-    operator<=
-    operator>
-    operator>=
-    swap
+    operator==      NOK
+    operator!=      NOK
+    operator<       NOK
+    operator<=      NOK
+    operator>       NOK
+    operator>=      NOK
+    swap            NOK
     */
 }
 

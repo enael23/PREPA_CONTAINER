@@ -40,9 +40,13 @@ namespace ft
 // std::cout << "BOB min\n";
             s_map_node* x = this;
             // while (x->left && !x->left->is_nil)
-            while (x->left != x->left->parent)
+            while (x->left != x->left->parent)                               // initial NIL CHECK
+            // while (x->left != x->left->right)
 
+// { 
+// std::cout << "hop\n";
                 x = x->left;
+// }
             return x;
         }
 
@@ -50,7 +54,9 @@ namespace ft
         {
             s_map_node* x = this;
             // while (x->right && !x->right->is_nil)
-            while (x->right != x->right->parent)
+            while (x->right != x->right->parent)                             // initial NIL CHECK
+            // while (x->right != x->right->right)
+
                 x = x->right;
             return x;
         }
@@ -65,7 +71,8 @@ namespace ft
             s_map_node* y = this->parent;
             // while (y && !y->is_nil && (x == y->right))
 // std::cout << "x = " << x->val.first << ", y = " << y->val.first << "\n";
-            while (y != y->parent && (x == y->right))
+            while (y != y->parent && (x == y->right))                        // initial NIL CHECK
+            // while (y != y->right && (x == y->right))
             {
                 x = y;
                 y = y->parent;
@@ -82,7 +89,8 @@ namespace ft
                 return (x->left->tree_max());
             s_map_node* y = this->parent;
             // while (y && !y->is_nil && (x == y->left))
-            while (y != y->parent && (x == y->left))
+            while (y != y->parent && (x == y->left))                         // initial NIL CHECK
+            // while (y != y->right && (x == y->left))
             {
                 x = y;
                 y = y->parent;

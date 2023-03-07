@@ -91,6 +91,13 @@ void TreePrinter(ft::s_map_node<ft::pair<const int, char> >* root)
     }
 }
 
+void print_list (NS::map<int,char> & mymap)
+{
+	std::cout << "Ceck list      : ";
+	for (NS::map<int,char>::iterator it = mymap.begin(); it!=mymap.end();it++)
+		std::cout << it->first << " ";
+	std::cout << "\n";
+}
 
 int main()
 {
@@ -193,18 +200,66 @@ int main()
 	// std::cout << "Upper bound for 20 : " << mymap.upper_bound(20)->first << "\n";
 	std::cout << "Test upper bound min (20) = end : " << (mymap.upper_bound(20) == mymap.end()) << "\n";
 
-		std::cout << "\n-----------\nTEST AT\n-----------\n";
-		std::cout << "at 10 = c : " << mymap.at(10) << "\n";
-		std::cout << "at 15 = b : " << mymap.at(15) << "\n";
-		try
-		{
-			std::cout << "at 9 = c : " << mymap.at(9) << "\n";
-		}
-		catch(const std::exception& e)
-		{
-			std::cerr << e.what() << '\n';
-		}
+	std::cout << "\n-----------\nTEST AT\n-----------\n";
+	std::cout << "at 10 = c : " << mymap.at(10) << "\n";
+	std::cout << "at 15 = b : " << mymap.at(15) << "\n";
+	try
+	{
+		std::cout << "at 9 = c : " << mymap.at(9) << "\n";
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
 		
+	std::cout << "\n-----------\nTEST OPERATROR[]\n-----------\n";
+	std::cout << "Value for 10 got with [] (c) : " << mymap[10] << "\n";
+	std::cout << "Value for 15 got with [] (b) : " << mymap[15] << "\n";
+	std::cout << "Modification of 15 value to d with []\n"; mymap[15] = 'd';
+	std::cout << "Value for 15 got with [] (d) : " << mymap[15] << "\n";
+	std::cout << "Mymap size = (13) : " << mymap.size() << "\n";
+	std::cout << "New element 9, e set with []\n"; mymap[9] = 'e';
+	std::cout << "Value for 9 got with [] (e) : " << mymap[9] << "\n";
+	std::cout << "Mymap size = (14) : " << mymap.size() << "\n";
+
+	std::cout << "\n-----------\nTEST BOUCLE + REV\n-----------\n";
+	std::cout << "Ceck list      : ";
+	for (NS::map<int,char>::iterator it = mymap.begin(); it!=mymap.end();it++)
+		std::cout << it->first << " ";
+	std::cout << "\n";
+	std::cout << "Ceck list rev  : ";
+	for (NS::map<int,char>::reverse_iterator it = mymap.rbegin(); it!=mymap.rend();it++)
+		std::cout << it->first << " ";
+	std::cout << "\n";
+
+	std::cout << "\n-----------\nTEST ERASE\n-----------\n";
+	std::cout << "Erase 10\n"; mymap.erase(10); print_list(mymap);
+
+	// std::cout << "Ceck list      : ";
+	// for (NS::map<int,char>::iterator it = mymap.begin(); it!=mymap.end();it++)
+	// 	std::cout << it->first << " ";
+	// std::cout << "\n";
+
+	// std::cout << "Erase 30\n"; mymap.erase(30); std::cout << "DONE"; print_list(mymap);
+	std::cout << "Erase first\n"; mymap.erase(mymap.begin()); print_list(mymap);
+
+	// std::cout << "Ceck list      : ";
+	// for (NS::map<int,char>::iterator it = mymap.begin(); it!=mymap.end();it++)
+	// 	std::cout << it->first << " ";
+	// std::cout << "\n";
+
+	NS::map<int,char>::iterator it3 = mymap.begin();
+	it3++;
+	it3++;
+	std::cout << "Erase third\n"; mymap.erase(it3); print_list(mymap);
+
+
+	// 	std::cout << "Ceck list      : ";
+	// for (NS::map<int,char>::iterator it = mymap.begin(); it!=mymap.end();it++)
+	// 	std::cout << it->first << " ";
+	// std::cout << "\n";
+	
+
 
 	// std::cout << "\n--------------\nTEST AFFICHAGE\n--------------\n";
 

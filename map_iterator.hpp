@@ -179,7 +179,7 @@ namespace ft
 
 			const_map_iterator &operator++ (void)
 			{
-				this->_node = this->_node->next();
+				this->_node = this->_node->tree_successor();
 				return *this;
 			}
 
@@ -188,14 +188,14 @@ namespace ft
 				if (this->_node->is_end)
 					this->_node = this->_node->right;
 				else
-					this->_node = this->_node->prev();
+					this->_node = this->_node->tree_predecessor();
 				return *this;
 			}
 
 			const_map_iterator operator++ (int)
 			{
 				const_map_iterator tmp = *this;
-				this->_node = this->_node->next();
+				this->_node = this->_node->tree_successor();
 				return tmp;
 			}
 
@@ -205,7 +205,7 @@ namespace ft
 				if (this->_node->is_end)
 					this->_node = this->_node->right;
 				else
-					this->_node = this->_node->prev();
+					this->_node = this->_node->tree_predecessor();
 				return tmp;
 			}
 
