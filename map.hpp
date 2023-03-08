@@ -228,8 +228,9 @@ namespace ft
             ~map()
             {
 // std::cout << "DESTROYER";
-                clear();
-                _alloc.destroy(_nil);
+                if (_size)
+                    clear();
+                // _alloc.destroy(_nil);
                 _alloc.deallocate(_nil, 1);
             }
 
@@ -472,7 +473,7 @@ namespace ft
             iterator lower_bound (const key_type& k)
             {
                 node* tmp = _nil->left;
-                node* result = _nil->left;
+                node* result = _nil;//->left;
 
                 while (tmp != _nil)
                 {
@@ -490,7 +491,7 @@ namespace ft
             const_iterator lower_bound (const key_type& k) const
             {
                 node* tmp = _nil->left;
-                node* result = _nil->left;
+                node* result = _nil;//->left;
 
                 while (tmp != _nil)
                 {
@@ -914,7 +915,7 @@ node* get_root()
 
    	template <class Key, class T, class Compare, class Alloc>
 	bool operator==(const map<Key,T,Compare,Alloc> & lhs, const map<Key,T,Compare,Alloc> & rhs)
-	{ return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()/*, rhs.end()*/)); }
+	{ return (ft::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
 
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator<(const map<Key,T,Compare,Alloc> & lhs, const map<Key,T,Compare,Alloc> & rhs)
