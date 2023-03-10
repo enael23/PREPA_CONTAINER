@@ -295,15 +295,15 @@ namespace ft
 
 			reference operator[] (size_type n)
 			{
-				if (n >= _size)
-					throw std::out_of_range("vector::[] -> index out of range !");
+				// if (n >= _size)
+				// 	throw std::out_of_range("vector::[] -> index out of range !");
 				return (*(_array + n));
 			}
 			
 			const_reference operator[] (size_type n) const
 			{
-				if (n >= _size)
-					throw std::out_of_range("vector::[] -> index out of range !");
+				// if (n >= _size)
+				// 	throw std::out_of_range("vector::[] -> index out of range !");
 				return (*(_array + n));
 			}
 
@@ -566,17 +566,30 @@ namespace ft
 
 			}
 
+// 			iterator erase (iterator position)
+// 			{
+// std::cout << "SIZE 1=" << _size << " ";
+// 				if (this->empty())
+// 					return (this->end());
+// 				iterator ite_cur = position;
+// 				iterator ite_end = this->end();
+
+// 				for (; (ite_cur + 1) != ite_end; ite_cur++)
+// 					*ite_cur = *(ite_cur + 1);
+// 				_allocator.destroy(_array + _size - 1);
+// 				_size--;
+// std::cout << "SIZE 2=" << _size << " ";
+// 				return (position);
+// 			}
+
 			iterator erase (iterator position)
 			{
-				if (this->empty())
-					return (this->end());
-				iterator ite_cur = position;
-				iterator ite_end = this->end();
+				for (size_type i = position - begin() ; i < _size - 1 ; i++)
+					_array[i] = _array[i + 1];
 
-				for (; (ite_cur + 1) != ite_end; ite_cur++)
-					*ite_cur = *(ite_cur + 1);
-				_allocator.destroy(_array + _size - 1);
 				_size--;
+				_allocator.destroy(_array + _size);
+
 				return (position);
 			}
 
@@ -646,23 +659,43 @@ namespace ft
 				return (n);
 			}
 			
+			// void shrink_to_fit( void )
+			// {
+			// if (this->_capacity != this->_size)
+			// 	{
+			// 		pointer tmp = this->_allocator.allocate(this->_size);
+			// 		iterator it = this->begin();
+			// 		for (size_type i = 0; i < this->_size; i++)
+			// 		{
+			// 			this->_allocator.construct(tmp + i, *it);
+			// 			it++;
+			// 		}
+			// 		size_type size = this->_size;
+			// 		this->clear();
+			// 		this->_allocator.deallocate(this->_array, this->_capacity);
+			// 		this->_array = tmp;
+			// 		this->_size = size;
+			// 		this->_capacity = size;
+			// 	}
+			// }
+
 			void shrink_to_fit( void )
 			{
-			if (this->_capacity != this->_size)
+			if (_capacity != _size)
 				{
-					pointer tmp = this->_allocator.allocate(this->_size);
-					iterator it = this->begin();
-					for (size_type i = 0; i < this->_size; i++)
+					pointer tmp = _allocator.allocate(_size);
+					iterator it = begin();
+					for (size_type i = 0; i < _size; i++)
 					{
-						this->_allocator.construct(tmp + i, *it);
+						_allocator.construct(tmp + i, *it);
 						it++;
 					}
-					size_type size = this->_size;
-					this->clear();
-					this->_allocator.deallocate(this->_array, this->_capacity);
-					this->_array = tmp;
-					this->_size = size;
-					this->_capacity = size;
+					size_type size = _size;
+					clear();
+					_allocator.deallocate(_array, _capacity);
+					_array = tmp;
+					_size = size;
+					_capacity = size;
 				}
 			}
 
