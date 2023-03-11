@@ -132,7 +132,7 @@ namespace ft
         s_set_node*         parent;
         s_set_node*         left;
         s_set_node*         right;
-        value_type          val;
+        const value_type          val;
         bool                is_black;
 
         s_set_node( const value_type& n_val ) : parent(NULL), left(NULL), right(NULL), val(n_val), is_black(true) {}
@@ -195,8 +195,10 @@ namespace ft
 
 			typedef typename std::bidirectional_iterator_tag		    iterator_category;
 			typedef const T					                            value_type;
-			typedef T*						                            pointer;
-			typedef T&						                            reference;
+			// typedef T*						                            pointer;
+			// typedef T&						                            reference;
+            typedef value_type*						                            pointer;
+			typedef value_type&						                            reference;
 			typedef s_set_node<T>*					                    node;
 			typedef typename iterator_traits<node>::difference_type	    difference_type;
 
@@ -208,6 +210,8 @@ namespace ft
 
 			set_iterator(void) : _node(NULL) {}
 			set_iterator(const set_iterator & src) : _node(src.base()) {}
+            template <class U>
+			set_iterator(const const_set_iterator<U> & src) : _node(src.base()) {}
 			set_iterator(node n) : _node(n) {}
 			~set_iterator(void) {}
 
