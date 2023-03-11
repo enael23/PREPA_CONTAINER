@@ -15,6 +15,8 @@
 
 #include <cstddef> //pour std::ptrdiff_t
 
+#include <iterator>
+
 namespace ft
 {
 //	struct input_operator_tag {};

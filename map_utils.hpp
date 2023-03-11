@@ -13,7 +13,8 @@
 #ifndef MAP_UTILS_HPP
 # define MAP_UTILS_HPP
 
-# include <iostream>
+// # include <iostream>
+#include <cstdio>
 
 namespace ft
 {
