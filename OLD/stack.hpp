@@ -63,12 +63,12 @@ namespace ft
 	class stack
 	{
 		public:
-			typedef typename Container::value_type			value_type;
-			typedef typename Container::size_type			size_type;
-			typedef Container								container_type;
-	
-			typedef typename Container::reference			reference;
-			typedef typename Container::const_reference		const_reference;
+			typedef typename Container::value_type		value_type;
+			typedef typename Container::size_type		size_type;
+			typedef Container							container_type;
+
+			typedef typename Container::reference		reference;
+			typedef typename Container::const_reference	const_reference;
 		
 		protected:
 			Container _c;
@@ -89,6 +89,9 @@ namespace ft
 				this->_c = other._c;
 				return *this;
 			}
+
+
+
 
 			bool empty() const				{ return _c.empty(); }
 			size_type size() const			{ return _c.size(); }

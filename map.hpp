@@ -174,13 +174,15 @@ namespace ft
                     { return (v_comp(x.first, y.first)); }
 			};
 
-		public :
+		private :
 
 			node*		        _nil;
 			size_type           _size;
 			allocator_type      _alloc;
 			key_compare         _key_comp;
 			value_compare       _value_comp;
+
+		public :
 
 			/*
 			MEMBER FUNCTIONS
@@ -190,8 +192,6 @@ namespace ft
 			operator= (assign content)	v
             get_allocator               v
 			*/
-
-		public :
 
             explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : 
                 _size(0), _alloc(alloc), _key_comp(comp), _value_comp(value_compare(comp))
@@ -235,7 +235,6 @@ namespace ft
 
             ~map()
             {
-// std::cout << "DESTROYER";
                 if (_size)
                     clear();
                 // _alloc.destroy(_nil);
@@ -244,26 +243,6 @@ namespace ft
 
             allocator_type get_allocator() const 
             { return this->_alloc; }
-/*
-        void _new_nil_node (void)
-        {
-            _nil = _alloc.allocate(1);
-            this->_construct(_nil);
-            _nil->color = BLACK_;
-        }
-
-        void _construct (node * ptr, const value_type & val = value_type())
-        {
-            node tmp(val);
-            tmp.left = _nil;
-            tmp.right = _nil;
-            tmp.parent = _nil;
-            tmp.color = RED_;
-            _alloc.construct(ptr, tmp);
-        }
-*/
-
-
 
 			/*
 			Iterators:
@@ -278,12 +257,8 @@ namespace ft
 			crend			x (c++11)
 			*/
 
-        	// iterator                begin()         { return iterator(this->_nil->right->tree_min()); }
-			// const_iterator          begin() const   { return const_iterator(this->_nil->right->tree_min()); }
-
         	iterator                begin()         { return iterator(this->_nil->tree_min()); }
 			const_iterator          begin() const   { return const_iterator(this->_nil->tree_min()); }
-
 			iterator                end()           { return iterator(this->_nil); }
 			const_iterator          end() const     { return const_iterator(this->_nil); }
 			reverse_iterator        rbegin()        { return reverse_iterator(this->_nil); }
@@ -319,7 +294,6 @@ namespace ft
 					throw std::out_of_range("map::at : out of range exception");
 			}
 
-
 			/*
 			Capacity:
 			~~~~~~~~~
@@ -352,7 +326,6 @@ namespace ft
 
             void clear()
             {
-// std::cout << "CLEAR";
                 clear_node(_nil->left);
                 _nil->left = _nil;
                 _size = 0;
@@ -379,10 +352,8 @@ namespace ft
 					insert(*first);
 			}
 
-
             void erase(iterator position)
             {
-// std::cout << "ERASE IT\n";
                 if (position != end())
                 {
                     node* node = position.base();
@@ -395,7 +366,6 @@ namespace ft
 
             size_type erase(const key_type& k)
             {
-// std::cout << "ERASE KEY " << k << "\n";
                 iterator it = find(k);
                 if (it == end())
                     return(0);
@@ -405,10 +375,8 @@ namespace ft
 
             void erase(iterator first, iterator last)
             {
-// std::cout << "ERASE RANGE\n";
                 for (; first != last; )
 					erase(first++);
-				// return last;
             }
 
 			void swap(map & x)
@@ -439,10 +407,8 @@ namespace ft
             */
 
             iterator find (const key_type& k)
-            {
-// std::cout << "FIND" << k << "\n";                
+            {              
                 node* tmp = _nil->left;
-
                 while(tmp != _nil && !_is_equal(k, tmp->val.first))
                 {
                 	if (key_compare()(k, tmp->val.first))
@@ -451,11 +417,7 @@ namespace ft
 						tmp = tmp->right;    
                 }
                 if (tmp == _nil)
-// {
-// std::cout << "NOT FOUND " << k << "\n";
                     return(end());
-// }
-// std::cout << "FOUND " << k << "\n";
                 return(iterator(tmp));
             }
             
@@ -566,7 +528,6 @@ namespace ft
 			ft::pair<iterator, iterator> equal_range(const key_type& k)
             { return (ft::make_pair(lower_bound(k), upper_bound(k))); }
 
-
             /*
             Observers:
             ~~~~~~~~~~
@@ -585,13 +546,11 @@ namespace ft
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             */
 
+        private :
+        // public :    // For tests with tree display
 
-
-        // private :
-        public :    // For tests with tree display
-
-node* get_root()
-{ return (_nil->left); }
+// node* get_root()
+// { return (_nil->left); }
 
 			bool _is_equal(const key_type & val1, const key_type & val2) const
             { return (!key_compare()(val1, val2) && !key_compare()(val2, val1)); }
@@ -600,40 +559,6 @@ node* get_root()
             RED-BLACK Tree functions:
             ~~~~~~~~~~~~~~~~~~~~~~~~~
             */
-            
-            // void insert (const value_type& val)
-            // {
-            //     node* z = _alloc.allocate(1);
-
-            //     node tmp(val);
-            //     // tmp.is_nil = false;
-            //     tmp.parent = _nil;
-            //     tmp.left = _nil;
-            //     tmp.right = _nil;
-            //     tmp.is_black = false;
-
-            //     _alloc.construct(z, tmp);
-
-            //     node* y = _nil;
-            //     node* x = _nil->left;
-            //     while (x != _nil)
-            //     {
-            //         y = x;
-            //         if (_value_comp(z->val, y->val))
-            //             x = x->left;
-            //         else 
-            //             x = x->right;
-            //     }
-            //     z->parent = y;
-            //     if (y == _nil)
-            //         _nil->left = z;
-            //     else if (_value_comp(z->val, y->val))
-            //         y->left = z;
-            //     else
-            //         y->right = z;
-
-            //     _size++;
-            // }
 
             void left_rotate(node* x)
             {
@@ -684,7 +609,6 @@ node* get_root()
                 node* z = _alloc.allocate(1);
 
                 node tmp(val);
-                // tmp.is_nil = false;
                 tmp.parent = _nil;
                 tmp.left = _nil;
                 tmp.right = _nil;
@@ -787,7 +711,6 @@ node* get_root()
 
             void RB_delete(node* z)
             {
-// std::cout << "RB_DELETE " << z->val.first << "\n";
                 node* x;
                 node* y = z;
                 bool y_original_is_black = y->is_black;
@@ -829,7 +752,6 @@ node* get_root()
             void RB_delete_fixup(node* x)
             {
                 node* w;
-// std::cout << "RB_DELETE_FIXUP\n";
                 while (x != _nil->left && x->is_black == true)
                 {
                     if (x == x->parent->left)
@@ -902,7 +824,6 @@ node* get_root()
             {
                 if (n != _nil)
                 {
-// std::cout << "clear node key = " << n->val.first;
                     clear_node(n->left);
                     clear_node(n->right);
                     _alloc.destroy(n);
@@ -911,7 +832,6 @@ node* get_root()
             }
 
     };
-
 
     /*
     Non-member functions:
@@ -958,6 +878,5 @@ node* get_root()
 	{ x.swap(y); }
 
 }
-
 
 #endif

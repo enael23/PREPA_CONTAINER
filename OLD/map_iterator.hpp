@@ -61,18 +61,30 @@ namespace ft
 
 			map_iterator &operator++ (void)
 			{
+// std::cout << "TOTO++ void\n";
 				this->_node = this->_node->tree_successor();
 				return *this;
 			}
 
 			map_iterator &operator-- (void)
 			{
+// std::cout << "TOTO-- void\n";
 				this->_node = this->_node->tree_predecessor();
 				return *this;
 			}
 
+			// map_iterator &operator-- (void)
+			// {
+			// 	if (this->_node->is_end)
+			// 		this->_node = this->_node->right;
+			// 	else
+			// 		this->_node = this->_node->tree_predecessor();
+			// 	return *this;
+			// }
+
 			map_iterator operator++ (int)
 			{
+// std::cout << "TOTO++ int\n";
 				map_iterator tmp = *this;
 				this->_node = this->_node->tree_successor();
 				return tmp;
@@ -80,19 +92,53 @@ namespace ft
 
 			map_iterator operator-- (int)
 			{
+// std::cout << "TOTO-- int\n";
 				map_iterator tmp = *this;
 				this->_node = this->_node->tree_predecessor();
 				return tmp;
 			}
 
-			bool operator== (const map_iterator & rhs) const			{ return (this->_node == rhs._node); }
-			bool operator!= (const map_iterator &rhs) const				{ return this->_node != rhs._node; }
+			// map_iterator operator-- (int)
+			// {
+			// 	map_iterator tmp = *this;
+			// 	if (this->_node->is_end)
+			// 		this->_node = this->_node->right;
+			// 	else
+			// 		this->_node = this->_node->tree_predecessor();
+			// 	return tmp;
+			// }
+
+			bool operator== (const map_iterator & rhs) const
+			{
+				return (this->_node == rhs._node);
+			}
+
+			bool operator!= (const map_iterator &rhs) const
+			{
+				return this->_node != rhs._node;
+			}
+
 			template < class U >
-			bool operator== (const const_map_iterator<U> & rhs) const	{ return (this->_node == rhs.base()); }
+			bool operator== (const const_map_iterator<U> & rhs) const
+			{
+				return (this->_node == rhs.base());
+			}
+
 			template < class U >
-			bool operator!= (const const_map_iterator<U> &rhs) const	{ return this->_node != rhs.base(); }
-			reference operator* (void) const							{ return this->_node->val; }
-			pointer operator-> (void) const								{ return &this->_node->val; }
+			bool operator!= (const const_map_iterator<U> &rhs) const
+			{
+				return this->_node != rhs.base();
+			}
+
+			reference operator* (void) const
+			{
+				return this->_node->val;
+			}
+
+			pointer operator-> (void) const
+			{
+				return &this->_node->val;
+			}
 	};
 
 	template < class T >
@@ -119,8 +165,9 @@ namespace ft
 			const_map_iterator(node n) : _node(n) {}
 			~const_map_iterator(void) {}
 
-			node base(void) const
-			{ return this->_node; }
+			node base(void) const {
+				return this->_node;
+			}
 
 			template <class U>
 			const_map_iterator &operator= (const map_iterator<U> & rhs)
@@ -138,7 +185,10 @@ namespace ft
 
 			const_map_iterator &operator-- (void)
 			{
-				this->_node = this->_node->tree_predecessor();
+				// if (this->_node->is_end)
+				// 	this->_node = this->_node->right;
+				// else
+					this->_node = this->_node->tree_predecessor();
 				return *this;
 			}
 
@@ -152,18 +202,44 @@ namespace ft
 			const_map_iterator operator-- (int)
 			{
 				const_map_iterator tmp = *this;
-				this->_node = this->_node->tree_predecessor();
+				// if (this->_node->is_end)
+				// 	this->_node = this->_node->right;
+				// else
+					this->_node = this->_node->tree_predecessor();
 				return tmp;
 			}
 
-			bool operator== (const const_map_iterator & rhs) const	{ return (this->_node == rhs._node); }
-			bool operator!= (const const_map_iterator &rhs) const	{ return this->_node != rhs._node; }
+			bool operator== (const const_map_iterator & rhs) const
+			{
+				return (this->_node == rhs._node);
+			}
+
+			bool operator!= (const const_map_iterator &rhs) const
+			{
+				return this->_node != rhs._node;
+			}
+
 			template < class U >
-			bool operator== (const map_iterator<U> & rhs) const		{ return (this->_node == rhs.base()); }
+			bool operator== (const map_iterator<U> & rhs) const
+			{
+				return (this->_node == rhs.base());
+			}
+
 			template < class U >
-			bool operator!= (const map_iterator<U> &rhs) const		{ return this->_node != rhs.base(); }
-			reference operator* (void) const						{ return this->_node->val; }
-			pointer operator-> (void) const							{ return &this->_node->val; }
+			bool operator!= (const map_iterator<U> &rhs) const
+			{
+				return this->_node != rhs.base();
+			}
+
+			reference operator* (void) const
+			{
+				return this->_node->val;
+			}
+
+			pointer operator-> (void) const
+			{
+				return &this->_node->val;
+			}
 	};
 
 }

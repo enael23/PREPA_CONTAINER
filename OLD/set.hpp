@@ -112,7 +112,9 @@ namespace std
 */
 
 #include "iterator_traits.hpp"
+// #include "set_utils.hpp"
 #include "pair.hpp"
+// #include "set_iterator.hpp"
 #include "reverse_iterator.hpp"
 #include "lexicographical_compare.hpp"
 
@@ -193,8 +195,10 @@ namespace ft
 
 			typedef typename std::bidirectional_iterator_tag		    iterator_category;
 			typedef const T					                            value_type;
-            typedef value_type*						                    pointer;
-			typedef value_type&						                    reference;
+			// typedef T*						                            pointer;
+			// typedef T&						                            reference;
+            typedef value_type*						                            pointer;
+			typedef value_type&						                            reference;
 			typedef s_set_node<T>*					                    node;
 			typedef typename iterator_traits<node>::difference_type	    difference_type;
 
@@ -212,7 +216,9 @@ namespace ft
 			~set_iterator(void) {}
 
 			node base(void) const 
-            { return this->_node; }
+            {
+				return this->_node;
+			}
 
 			set_iterator &operator= (const set_iterator & rhs)
 			{
@@ -337,6 +343,9 @@ namespace ft
 			pointer operator-> (void) const { return &this->_node->val; }
 	};
 
+
+
+
 	template < class Key, class Compare = std::less<Key>, class Alloc = std::allocator<Key> >
 	class set 
     {
@@ -348,11 +357,23 @@ namespace ft
 			typedef Compare									                    key_compare;
             typedef Compare									                    value_compare;
 			typedef s_set_node<value_type>							            node;
+			// typedef s_map_node<value_type>							            node;
+
+            // typedef typename Alloc::template rebind<node>::other				allocator_type;
+			// typedef typename allocator_type::reference						    reference;
+			// typedef typename allocator_type::const_reference					const_reference;
+			// typedef typename allocator_type::pointer							pointer;
+			// typedef typename allocator_type::const_pointer						const_pointer;
+
 			typedef typename Alloc::reference						            reference;
 			typedef typename Alloc::const_reference					            const_reference;
 			typedef typename Alloc::pointer							            pointer;
 			typedef typename Alloc::const_pointer						        const_pointer;
             typedef typename Alloc::template rebind<node>::other				allocator_type;
+
+            // typedef typename ft::map_iterator<value_type>					    iterator;
+			// typedef typename ft::const_map_iterator<value_type>				    const_iterator;
+
             typedef typename ft::set_iterator<value_type>					    iterator;
 			typedef typename ft::const_set_iterator<value_type>				    const_iterator;
 			typedef typename ft::reverse_iterator<iterator>					    reverse_iterator;
@@ -360,7 +381,7 @@ namespace ft
 			typedef typename ft::iterator_traits<iterator>::difference_type		difference_type;
 			typedef size_t									                    size_type;
 
-		private :
+		public :
 
 			node*		        _nil;
 			size_type           _size;
@@ -421,8 +442,10 @@ namespace ft
 
             ~set()
             {
+// std::cout << "DESTROYER";
                 if (_size)
                     clear();
+                // _alloc.destroy(_nil);
                 _alloc.deallocate(_nil, 1);
             }
 
@@ -444,6 +467,7 @@ namespace ft
 
         	iterator                begin()         { return iterator(this->_nil->tree_min()); }
 			const_iterator          begin() const   { return const_iterator(this->_nil->tree_min()); }
+
 			iterator                end()           { return iterator(this->_nil); }
 			const_iterator          end() const     { return const_iterator(this->_nil); }
 			reverse_iterator        rbegin()        { return reverse_iterator(this->_nil); }
@@ -483,6 +507,7 @@ namespace ft
 
             void clear()
             {
+// std::cout << "CLEAR";
                 clear_node(_nil->left);
                 _nil->left = _nil;
                 _size = 0;
@@ -509,8 +534,10 @@ namespace ft
 					insert(*first);
 			}
 
+
             void erase(iterator position)
             {
+// std::cout << "ERASE IT\n";
                 if (position != end())
                 {
                     node* node = position.base();
@@ -523,6 +550,7 @@ namespace ft
 
             size_type erase(const key_type& k)
             {
+// std::cout << "ERASE KEY " << k << "\n";
                 iterator it = find(k);
                 if (it == end())
                     return(0);
@@ -532,8 +560,10 @@ namespace ft
 
             void erase(iterator first, iterator last)
             {
+// std::cout << "ERASE RANGE\n";
                 for (; first != last; )
 					erase(first++);
+				// return last;
             }
 
 			void swap(set & x)
@@ -564,7 +594,8 @@ namespace ft
             */
 
             iterator find (const key_type& k)
-            {             
+            {
+// std::cout << "FIND" << k << "\n";                
                 node* tmp = _nil->left;
 
                 while(tmp != _nil && !_is_equal(k, tmp->val))
@@ -575,7 +606,11 @@ namespace ft
 						tmp = tmp->right;    
                 }
                 if (tmp == _nil)
+// {
+// std::cout << "NOT FOUND " << k << "\n";
                     return(end());
+// }
+// std::cout << "FOUND " << k << "\n";
                 return(iterator(tmp));
             }
             
@@ -686,6 +721,7 @@ namespace ft
 			ft::pair<iterator, iterator> equal_range(const key_type& k)
             { return (ft::make_pair(lower_bound(k), upper_bound(k))); }
 
+
             /*
             Observers:
             ~~~~~~~~~~
@@ -704,11 +740,13 @@ namespace ft
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             */
 
-        private :
-        // public :    // For tests with tree display
 
-// node* get_root()
-// { return (_nil->left); }
+
+        // private :
+        public :    // For tests with tree display
+
+node* get_root()
+{ return (_nil->left); }
 
 			bool _is_equal(const key_type & val1, const key_type & val2) const
             { return (!key_compare()(val1, val2) && !key_compare()(val2, val1)); }
@@ -717,6 +755,40 @@ namespace ft
             RED-BLACK Tree functions:
             ~~~~~~~~~~~~~~~~~~~~~~~~~
             */
+            
+            // void insert (const value_type& val)
+            // {
+            //     node* z = _alloc.allocate(1);
+
+            //     node tmp(val);
+            //     // tmp.is_nil = false;
+            //     tmp.parent = _nil;
+            //     tmp.left = _nil;
+            //     tmp.right = _nil;
+            //     tmp.is_black = false;
+
+            //     _alloc.construct(z, tmp);
+
+            //     node* y = _nil;
+            //     node* x = _nil->left;
+            //     while (x != _nil)
+            //     {
+            //         y = x;
+            //         if (_value_comp(z->val, y->val))
+            //             x = x->left;
+            //         else 
+            //             x = x->right;
+            //     }
+            //     z->parent = y;
+            //     if (y == _nil)
+            //         _nil->left = z;
+            //     else if (_value_comp(z->val, y->val))
+            //         y->left = z;
+            //     else
+            //         y->right = z;
+
+            //     _size++;
+            // }
 
             void left_rotate(node* x)
             {
@@ -765,7 +837,9 @@ namespace ft
             node* new_insert(const value_type& val)
             {
                 node* z = _alloc.allocate(1);
+
                 node tmp(val);
+                // tmp.is_nil = false;
                 tmp.parent = _nil;
                 tmp.left = _nil;
                 tmp.right = _nil;
@@ -868,6 +942,7 @@ namespace ft
 
             void RB_delete(node* z)
             {
+// std::cout << "RB_DELETE " << z->val.first << "\n";
                 node* x;
                 node* y = z;
                 bool y_original_is_black = y->is_black;
@@ -909,6 +984,7 @@ namespace ft
             void RB_delete_fixup(node* x)
             {
                 node* w;
+// std::cout << "RB_DELETE_FIXUP\n";
                 while (x != _nil->left && x->is_black == true)
                 {
                     if (x == x->parent->left)
@@ -981,6 +1057,7 @@ namespace ft
             {
                 if (n != _nil)
                 {
+// std::cout << "clear node key = " << n->val.first;
                     clear_node(n->left);
                     clear_node(n->right);
                     _alloc.destroy(n);
@@ -1036,5 +1113,6 @@ namespace ft
 	{ x.swap(y); }
 
 }
+
 
 #endif
