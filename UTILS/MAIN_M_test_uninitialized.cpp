@@ -30,7 +30,7 @@ int main()
 {
 	NS::pair<int, std::string>			my_pair(8, "salut");
 	NS::map<int, std::string>			test;
-/*	NS::map<int, std::string>::iterator	it;
+	NS::map<int, std::string>::iterator	it;
 
 	test.insert(my_pair);
 	test.insert(NS::pair<int, std::string>(-4, "bar"));
@@ -54,6 +54,6 @@ int main()
 // #endif
 
 	}
-	std::cout << "End of display loop\n";*/
+	std::cout << "End of display loop\n";
 }
 

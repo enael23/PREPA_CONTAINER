@@ -10,27 +10,62 @@
 #                                                                              #
 # **************************************************************************** #
 
+NAME		=	ft_containers
 
-NAME	=	ft_containers
-
-SRCS	=	main.cpp
+SRCS		=	main.cpp
+SRCS_V		=	main_vector.cpp
+SRCS_ST		=	main_stack.cpp
+SRCS_M		=	main_map.cpp
+SRCS_SE		=	main_set.cpp
 
 CC		=	c++
-CFLAGS	=	-Wall -Wextra -Werror
-OBJS	=	${SRCS:.cpp=.o}
+CFLAGS		=	-Wall -Wextra -Werror -std=c++98
+OBJS		=	${SRCS:.cpp=.o}
+DEPS		=	${OBJS:.o=.d}
 
 all		:	${NAME}
 
-$(NAME)	:	$(OBJS)
-		${CC} ${CFLAGS} -o ${NAME} ${OBJS}
+-include $(DEPS)
 
-clean	:
-		rm -f ${OBJS}
+$(NAME)		:	$(OBJS)
+			${CC} ${CFLAGS} ${OBJS} -o ${NAME}
 
-fclean	:
-		rm -f ${OBJS}
-		rm -f ${NAME}
+vector		:	
+			${CC} ${CFLAGS} ${SRCS_V} -o ft_vector -D NS=ft
+			${CC} ${CFLAGS} ${SRCS_V} -o std_vector -D NS=std
+			./ft_vector > ft_vector.txt && ./std_vector > std_vector.txt
+			diff ft_vector.txt std_vector.txt
+
+stack		:
+			${CC} ${CFLAGS} ${SRCS_ST} -o ft_stack -D NS=ft
+			${CC} ${CFLAGS} ${SRCS_ST} -o std_stack -D NS=std
+			./ft_stack > ft_stack.txt && ./std_stack > std_stack.txt
+			diff ft_stack.txt std_stack.txt
+
+map		:
+			${CC} ${CFLAGS} ${SRCS_M} -o ft_map -D NS=ft
+			${CC} ${CFLAGS} ${SRCS_M} -o std_map -D NS=std
+			./ft_map > ft_map.txt && ./std_map > std_map.txt
+			diff ft_map.txt std_map.txt
+
+set		:
+			${CC} ${CFLAGS} ${SRCS_SE} -o ft_set -D NS=ft
+			${CC} ${CFLAGS} ${SRCS_SE} -o std_set -D NS=std
+			./ft_set > ft_set.txt && ./std_set > std_set.txt
+			diff ft_set.txt std_set.txt
+
+%.o:%.cpp		
+			$(CC) -MMD $(CFLAGS) -c $< -o $@
+
+clean		:
+			rm -f ${OBJS} ${DEPS}
+
+cleantest	:
+			rm -f std_vector std_stack std_map std_set ft_vector ft_stack ft_map ft_set *.txt
+
+fclean		:
+			rm -f ${OBJS} ${NAME}
 
 re		:	fclean all
 
-.PHONY	:	all clean fclean re
+.PHONY		:	all vector stack map set clean cleantest fclean re
