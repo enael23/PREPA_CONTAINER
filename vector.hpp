@@ -526,10 +526,22 @@ namespace ft
 			
 		private :
 
+			// size_t	capacity_reserve_caclulator(size_t n)
+			// {
+			// 	if (n <= _size * 2)
+			// 		return (_size * 2);
+			// 	return (n);
+			// }
+
 			size_t	capacity_reserve_caclulator(size_t n)
 			{
-				if (n <= _size * 2)
-					return (_size * 2);
+				size_t s = _size * 2; 
+				if (n <= s)
+				{
+					if (s <= _allocator.max_size())
+						return (s);
+					return (_allocator.max_size());
+				}
 				return (n);
 			}
 

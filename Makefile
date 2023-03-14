@@ -6,7 +6,7 @@
 #    By: jpauline <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/03 16:53:57 by jpauline          #+#    #+#              #
-#    Updated: 2023/02/03 16:56:07 by jpauline         ###   ########.fr        #
+#    Updated: 2023/03/14 16:20:19 by jpauline         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,8 +63,8 @@ clean		:
 cleantest	:
 			rm -f std_vector std_stack std_map std_set ft_vector ft_stack ft_map ft_set *.txt
 
-fclean		:
-			rm -f ${OBJS} ${NAME}
+fclean		: clean cleantest
+			rm -f ${NAME}
 
 re		:	fclean all
 
