@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include <iostream>
+#include <ctime>
+
 
 #include "vector.hpp"
 #include <vector>
@@ -80,6 +82,8 @@ int main()
 {
     time_t start, end;
     time(&start);
+
+    clock_t t = clock();
 
     std::cout << "................................................" << std::endl;
     std::cout << "....................VECTOR......................" << std::endl;
@@ -623,6 +627,12 @@ std::cout << "................................................" << std::endl;
     std::cout << "Time taken by program is : " << std::fixed
          << time_taken;
     std::cout << " sec " << std::endl;
+
+
+    t = clock() - t;
+	std::cout << "\n\nTemps d'execution du programme : " << (((float)t/CLOCKS_PER_SEC) * 1000) << " millisecondes."<< std::endl;
+
+
 
     return 0;
 
