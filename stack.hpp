@@ -6,7 +6,7 @@
 /*   By: jpauline <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 19:46:28 by jpauline          #+#    #+#             */
-/*   Updated: 2023/03/13 17:39:58 by jpauline         ###   ########.fr       */
+/*   Updated: 2023/03/14 19:49:50 by jpauline         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ namespace std
 	bool operator<=(const stack<T, Container>& x, const stack<T, Container>& y);
 }
 */
-
-#include <iostream>
 
 #include "vector.hpp"
 
