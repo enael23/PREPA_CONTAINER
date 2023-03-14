@@ -14,6 +14,16 @@
 
 #include "vector.hpp"
 #include <vector>
+#include "stack.hpp"
+#include <stack>
+#include "map.hpp"
+#include "pair.hpp"
+#include <map>
+#include "set.hpp"
+#include <set>
+
+
+
 
 #ifndef NS
 # define NS ft
@@ -41,12 +51,39 @@ void show_v(std::string str, NS::vector<T> & v)
     std::cout << "}; \n";	
 };
 
+template <typename T>
+void print(NS::stack<T> v)
+{
+	std::cout << "Stack size : " << v.size();
+	if (v.size() > 0)
+		std::cout << " top = " << v.top();
+	std::cout << std::endl;
+}
 
+void print_list (NS::map<int,char> & mymap)
+{
+	std::cout << "Check list      : ";
+	for (NS::map<int,char>::iterator it = mymap.begin(); it!=mymap.end();it++)
+		std::cout << it->first << " ";
+	std::cout << "\n";
+}
+
+void print_list (NS::set<int> & myset)
+{
+	std::cout << "Check list      : ";
+	for (NS::set<int>::iterator it = myset.begin(); it!=myset.end();it++)
+		std::cout << *it << " ";
+	std::cout << "\n";
+}
 
 int main()
 {
     time_t start, end;
     time(&start);
+
+    std::cout << "................................................" << std::endl;
+    std::cout << "....................VECTOR......................" << std::endl;
+    std::cout << "................................................" << std::endl;
 
     // Create a vector containing integers
     NS::vector<int> v;
@@ -265,6 +302,320 @@ int main()
     std::cout << "check relational op : >=      : "; if (foo>=bar) std::cout << "foo is greater than or equal to bar";  std::cout << "\n";
 
 
+std::cout << "................................................" << std::endl;
+std::cout << "....................STACK......................." << std::endl;
+std::cout << "................................................" << std::endl;
+
+
+    NS::stack<int> v1;
+    std::cout << "v1 (empty)	: "; print(v1);
+
+    std::cout << "v1.push(5);\n"; v1.push(5);
+
+    NS::stack<int> v2(v1);
+    std::cout << "v2(v1)		: "; print(v2);
+
+    NS::stack<int> v3;
+    v3 = v2;
+    std::cout << "v3 = v2		: "; print(v3);
+
+    for (int i = 0; i < 1000; i++)
+        v1.push(i);
+    std::cout << "Loop test		: "; print(v1);
+    v1.pop();
+    v1.pop();
+    v1.pop();
+    v1.pop();
+    v1.pop();
+    v1.pop();
+    v1.pop();
+    v1.pop();
+    std::cout << "pop test		: "; print(v1);
+
+    std::cout << "(v1 == v2)	: " << (v1 == v2) << "\n";
+    std::cout << "(v1 != v2)	: " << (v1 != v2) << "\n";
+    std::cout << "(v1 < v2)	: " << (v1 < v2) << "\n";
+    std::cout << "(v1 <= v2)	: " << (v1 <= v2) << "\n";
+    std::cout << "(v1 > v2)	: " << (v1 > v2) << "\n";
+    std::cout << "(v1 >= v2)	: " << (v1 >= v2) << "\n";
+
+
+std::cout << "................................................" << std::endl;
+std::cout << ".....................MAP........................" << std::endl;
+std::cout << "................................................" << std::endl;
+
+    NS::map<int,char> mymap;
+
+	std::cout << "Is mymap empty? : " << mymap.empty() << std::endl;
+
+	mymap.insert(NS::pair<int, char>(12,'a'));
+	mymap.insert(NS::pair<int, char>(5,'b'));
+	mymap.insert(NS::pair<int, char>(3,'b'));
+	mymap.insert(NS::pair<int, char>(4,'b'));
+	mymap.insert(NS::pair<int, char>(10,'c'));
+	mymap.insert(NS::pair<int, char>(11,'b'));
+	mymap.insert(NS::pair<int, char>(7,'b'));
+	mymap.insert(NS::pair<int, char>(6,'b'));
+	mymap.insert(NS::pair<int, char>(8,'b'));
+	mymap.insert(NS::pair<int, char>(15,'b'));
+	mymap.insert(NS::pair<int, char>(13,'b'));
+	mymap.insert(NS::pair<int, char>(17,'b'));
+	mymap.insert(NS::pair<int, char>(14,'b'));
+
+	std::cout << "Is mymap empty? : " << mymap.empty() << std::endl;
+
+	// std::cout << "MAP ELEMENT 1 : \n";
+	// std::cout << "KEY = " << mymap._nil->left->val.first;
+	// std::cout << ", VAL = " << mymap._nil->left->val.second << std::endl;
+
+	// std::cout << "MAP ELEMENT 2 : \n";
+	// std::cout << "KEY = " << mymap._nil->left->right->val.first;
+	// std::cout << ", VAL = " << mymap._nil->left->right->val.second << std::endl;
+
+	NS::map<int,char>::iterator it;
+	it = mymap.begin();
+
+	std::cout << "IT TEST 1 = " << it->first << ", a = " << it->second << std::endl;
+	it++;
+		
+	std::cout << "IT TEST 2 = " << it->first << ", b = " << it->second << std::endl;
+	it--;
+	std::cout << "IT TEST 1 = " << it->first << ", a = " << it->second << std::endl;
+
+	//  std::cout << "\n--------------\nTEST AFFICHAGE\n--------------\n";
+
+	//  TreePrinter(mymap.get_root());
+
+
+	it++;
+	std::cout << "IT TEST 4 = " << it->first << ", b = " << it->second << std::endl;
+	// std::cout << "Est ce que it(4)->right == end()? : " << (mymap._nil->left->left->right->right == mymap._nil) << "\n";
+
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+	it++;
+	std::cout << it->first << "\n";
+
+
+	std::cout << "\n-----------\nTEST BOUCLE\n-----------\n";
+	// mymap.iterator it2;
+	NS::map<int,char>::iterator it2, end2;
+	it2 = mymap.begin();
+	end2 = mymap.end();
+	for (;it2!=end2;it2++)
+		std::cout << it2->first << " ";
+	std::cout << "\n";
+
+
+	std::cout << "\n-----------\nTEST COUNT\n-----------\n";
+	std::cout << "Count 10 = " << mymap.count(10) << "\n";
+	std::cout << "Count 9 = " << mymap.count(9) << "\n";
+
+	std::cout << "\n-----------\nTEST FIND\n-----------\n";
+	std::cout << "Find 10 second = " << mymap.find(10)->second << "\n";
+	std::cout << "Find 10 == end? " << (mymap.find(10) == mymap.end()) << "\n";	
+	std::cout << "Find 9 == end? " << (mymap.find(9) == mymap.end()) << "\n";
+
+	std::cout << "\n-----------\nLOWER BOUND\n-----------\n";
+	std::cout << "Lower bound for 10 = " << mymap.lower_bound(10)->first << "\n";
+	std::cout << "Upper bound for 10 = " << mymap.upper_bound(10)->first << "\n";
+	std::cout << "Lower bound for 9 = " << mymap.lower_bound(9)->first << "\n";
+	std::cout << "Upper bound for 9 = " << mymap.upper_bound(9)->first << "\n";
+	std::cout << "Test lower bound min (2) = end : " << (mymap.lower_bound(2) == mymap.end()) << "\n";
+	std::cout << "Lower bound for 2 : " << mymap.lower_bound(2)->first << "\n";
+	std::cout << "Upper bound for 2 : " << mymap.upper_bound(2)->first << "\n";
+	std::cout << "Lower bound for 17 : " << mymap.lower_bound(17)->first << "\n";
+	// std::cout << "Upper bound for 17 : " << mymap.upper_bound(17)->first << "\n";
+	std::cout << "Test upper bound min (17) = end : " << (mymap.upper_bound(17) == mymap.end()) << "\n";
+	// std::cout << "Lower bound for 20 : " << mymap.lower_bound(20)->first << "\n";
+	// std::cout << "Upper bound for 20 : " << mymap.upper_bound(20)->first << "\n";
+	std::cout << "Test upper bound min (20) = end : " << (mymap.upper_bound(20) == mymap.end()) << "\n";
+
+	std::cout << "\n-----------\nTEST AT\n-----------\n";
+	std::cout << "at 10 = c : " << mymap.at(10) << "\n";
+	std::cout << "at 15 = b : " << mymap.at(15) << "\n";
+	try
+	{
+		std::cout << "at 9 = c : " << mymap.at(9) << "\n";
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+		
+	std::cout << "\n-----------\nTEST OPERATROR[]\n-----------\n";
+	std::cout << "Value for 10 got with [] (c) : " << mymap[10] << "\n";
+	std::cout << "Value for 15 got with [] (b) : " << mymap[15] << "\n";
+	std::cout << "Modification of 15 value to d with []\n"; mymap[15] = 'd';
+	std::cout << "Value for 15 got with [] (d) : " << mymap[15] << "\n";
+	std::cout << "Mymap size = (13) : " << mymap.size() << "\n";
+	std::cout << "New element 9, e set with []\n"; mymap[9] = 'e';
+	std::cout << "Value for 9 got with [] (e) : " << mymap[9] << "\n";
+	std::cout << "Mymap size = (14) : " << mymap.size() << "\n";
+
+	std::cout << "\n-----------\nTEST BOUCLE + REV\n-----------\n";
+	std::cout << "Check list      : ";
+	for (NS::map<int,char>::iterator it = mymap.begin(); it!=mymap.end();it++)
+		std::cout << it->first << " ";
+	std::cout << "\n";
+	std::cout << "Check list rev  : ";
+	for (NS::map<int,char>::reverse_iterator it = mymap.rbegin(); it!=mymap.rend();it++)
+		std::cout << it->first << " ";
+	std::cout << "\n";
+
+	std::cout << "\n-----------\nTEST ERASE\n-----------\n";
+	std::cout << "Erase 10      - "; mymap.erase(10); print_list(mymap);
+
+	// std::cout << "Ceck list      : ";
+	// for (NS::map<int,char>::iterator it = mymap.begin(); it!=mymap.end();it++)
+	// 	std::cout << it->first << " ";
+	// std::cout << "\n";
+
+	// std::cout << "Erase 30\n"; mymap.erase(30); std::cout << "DONE"; print_list(mymap);
+	std::cout << "Erase first   - "; mymap.erase(mymap.begin()); print_list(mymap);
+
+	// std::cout << "Ceck list      : ";
+	// for (NS::map<int,char>::iterator it = mymap.begin(); it!=mymap.end();it++)
+	// 	std::cout << it->first << " ";
+	// std::cout << "\n";
+
+	NS::map<int,char>::iterator it3 = mymap.begin();
+	it3++;
+	it3++;
+	std::cout << "Erase third   - "; mymap.erase(it3); print_list(mymap);
+
+
+    std::cout << "................................................" << std::endl;
+    std::cout << ".....................SET........................" << std::endl;
+    std::cout << "................................................" << std::endl;
+
+    NS::set<int> myset;
+
+	std::cout << "Is myset empty? : " << myset.empty() << std::endl;
+
+	myset.insert(12);
+	myset.insert(5);
+	myset.insert(3);
+	myset.insert(4);
+	myset.insert(10);
+	myset.insert(11);
+	myset.insert(7);
+	myset.insert(6);
+	myset.insert(8);
+	myset.insert(15);
+	myset.insert(13);
+	myset.insert(17);
+	myset.insert(14);
+
+	std::cout << "Is myset empty? : " << myset.empty() << std::endl;
+
+
+	NS::set<int>::iterator its;
+	its = myset.begin();
+
+
+	its++;
+	std::cout << *its << "\n";
+	its++;
+	std::cout << *its << "\n";
+	its++;
+	std::cout << *its << "\n";
+	its++;
+	std::cout << *its << "\n";
+	its++;
+	std::cout << *its << "\n";
+	its++;
+	std::cout << *its << "\n";
+	its++;
+	std::cout << *its << "\n";
+	its++;
+	std::cout << *its << "\n";
+
+
+	std::cout << "\n-----------\nTEST BOUCLE\n-----------\n";
+	// myset.iterator its2;
+	NS::set<int>::iterator its2, ends2;
+	its2 = myset.begin();
+	ends2 = myset.end();
+	for (;its2!=ends2;its2++)
+		std::cout << *its2 << " ";
+	std::cout << "\n";
+
+
+	std::cout << "\n-----------\nTEST COUNT\n-----------\n";
+	std::cout << "Count 10 = " << myset.count(10) << "\n";
+	std::cout << "Count 9 = " << myset.count(9) << "\n";
+
+	std::cout << "\n-----------\nTEST FIND\n-----------\n";
+	std::cout << "Find 10 second = " << *myset.find(10) << "\n";
+	std::cout << "Find 10 == end? " << (myset.find(10) == myset.end()) << "\n";	
+	std::cout << "Find 9 == end? " << (myset.find(9) == myset.end()) << "\n";
+
+	std::cout << "\n-----------\nLOWER BOUND\n-----------\n";
+	std::cout << "Lower bound for 10 = " << *myset.lower_bound(10) << "\n";
+	std::cout << "Upper bound for 10 = " << *myset.upper_bound(10) << "\n";
+	std::cout << "Lower bound for 9 = " << *myset.lower_bound(9) << "\n";
+	std::cout << "Upper bound for 9 = " << *myset.upper_bound(9) << "\n";
+	std::cout << "Test lower bound min (2) = end : " << (myset.lower_bound(2) == myset.end()) << "\n";
+	std::cout << "Lower bound for 2 : " << *myset.lower_bound(2) << "\n";
+	std::cout << "Upper bound for 2 : " << *myset.upper_bound(2) << "\n";
+	std::cout << "Lower bound for 17 : " << *myset.lower_bound(17) << "\n";
+	// std::cout << "Upper bound for 17 : " << myset.upper_bound(17) << "\n";
+	std::cout << "Test upper bound min (17) = end : " << (myset.upper_bound(17) == myset.end()) << "\n";
+	// std::cout << "Lower bound for 20 : " << myset.lower_bound(20) << "\n";
+	// std::cout << "Upper bound for 20 : " << myset.upper_bound(20) << "\n";
+	std::cout << "Test upper bound min (20) = end : " << (myset.upper_bound(20) == myset.end()) << "\n";
+
+
+	std::cout << "\n-----------\nTEST BOUCLE + REV\n-----------\n";
+	std::cout << "Check list      : ";
+	for (NS::set<int>::iterator its = myset.begin(); its!=myset.end();its++)
+		std::cout << *its << " ";
+	std::cout << "\n";
+	std::cout << "Check list rev  : ";
+	for (NS::set<int>::reverse_iterator its = myset.rbegin(); its!=myset.rend();its++)
+		std::cout << *its << " ";
+	std::cout << "\n";
+
+	std::cout << "\n-----------\nTEST ERASE\n-----------\n";
+	std::cout << "Erase 10      - "; myset.erase(10); print_list(myset);
+
+	// std::cout << "Ceck list      : ";
+	// for (NS::set<int>::iterator its = myset.begin(); its!=myset.end();its++)
+	// 	std::cout << *its << " ";
+	// std::cout << "\n";
+
+	// std::cout << "Erase 30\n"; myset.erase(30); std::cout << "DONE"; print_list(myset);
+	std::cout << "Erase first   - "; myset.erase(myset.begin()); print_list(myset);
+
+	// std::cout << "Ceck list      : ";
+	// for (NS::set<int>::iterator its = myset.begin(); its!=myset.end();its++)
+	// 	std::cout << *its << " ";
+	// std::cout << "\n";
+
+	NS::set<int>::iterator its3 = myset.begin();
+	its3++;
+	its3++;
+	std::cout << "Erase third   - "; myset.erase(its3); print_list(myset);
+
+    std::cout << "................................................" << std::endl;
+    std::cout << ".....................END........................" << std::endl;
+    std::cout << "................................................" << std::endl;
+
+    std::cout << "\n" << std::endl;
+
     time(&end);
   
     // Calculating total time taken by the program.
@@ -272,6 +623,7 @@ int main()
     std::cout << "Time taken by program is : " << std::fixed
          << time_taken;
     std::cout << " sec " << std::endl;
+
     return 0;
 
 }
